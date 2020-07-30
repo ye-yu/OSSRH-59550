@@ -101,7 +101,7 @@ spawn the GUI on the relevant player action.
     ```java
     ScreenRegistry.<ScreenRendererHandler, BlockScreenRenderer>register(
             MY_CUSTOM_SCREEN_HANDLER,
-            (screenRendererHandler, playerInventory, text) -> BlockScreenRenderer(screenRendererHandler, playerInventory, text)
+            (screenRendererHandler, playerInventory, text) -> new BlockScreenRenderer(screenRendererHandler, playerInventory, text)
     );
     ```
 
