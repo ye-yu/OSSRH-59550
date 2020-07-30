@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "jamcgui",
+  "version": "${version}",
+  "name": "Just Another MC Gui",
+  "description": "A Fabric module for supporting MC widget-based Gui",
+  "authors": [
+    "Ye Yu"
+  ],
+  "contact": {
+    "homepage": "https://github.com/ye-yu",
+    "sources": "https://github.com/ye-yu"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/modid/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "io.github.yeyu.MCGui", "TestGui"
+    ],
+    "main": [
+      "io.github.yeyu.MCGui"
+    ]
+  },
+  "mixins": [
+    "mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.8.8",
+    "fabric": "*",
+    "fabric-language-kotlin": "*",
+    "minecraft": "1.16.1"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
