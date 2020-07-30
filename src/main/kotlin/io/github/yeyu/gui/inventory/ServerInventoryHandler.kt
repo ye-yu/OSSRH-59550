@@ -29,7 +29,7 @@ import kotlin.collections.LinkedHashSet
 /**
  * Extend to initialize block inventory
  */
-abstract class ServerInventoryHandler<T: ScreenRendererHandler>(
+abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
     type: ScreenHandlerType<T>,
     syncId: Int,
     final override val playerInventory: PlayerInventory
@@ -334,7 +334,7 @@ abstract class ServerInventoryHandler<T: ScreenRendererHandler>(
             playerInventory.player as ServerPlayerEntity?
         ) {
             it.writeInt(blockInventory!!.size())
-            for(i in 0 until blockInventory!!.size()) {
+            for (i in 0 until blockInventory!!.size()) {
                 it.writeItemStack(blockInventory!!.getStack(i))
             }
         }

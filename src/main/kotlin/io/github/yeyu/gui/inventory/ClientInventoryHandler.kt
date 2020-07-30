@@ -10,7 +10,6 @@ import io.github.yeyu.gui.inventory.utils.InventoryType
 import io.github.yeyu.gui.inventory.utils.InventoryUtil
 import io.github.yeyu.gui.inventory.utils.SlotActionType
 import io.github.yeyu.packet.ScreenPacket
-import io.github.yeyu.util.Logger
 import net.fabricmc.fabric.api.network.PacketContext
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
@@ -21,13 +20,14 @@ import net.minecraft.screen.ScreenHandlerType
 import java.util.*
 import java.util.stream.IntStream
 
-open class ClientInventoryHandler<T: ScreenRendererHandler>(
+open class ClientInventoryHandler<T : ScreenRendererHandler>(
     type: ScreenHandlerType<T>, syncId: Int, override val playerInventory: PlayerInventory
 ) : ClientScreenHandler(type, syncId), ClientInventoryInteractionListener, InventoryProvider {
 
     var pauseUpdateListening = true
 
     override var blockInventory: Inventory? = SimpleInventory(0)
+
     // from InventoryInteractionListener
     override val constrainedSlots: ArrayList<CapacityConstrainedSlot> = ArrayList()
 
@@ -85,7 +85,6 @@ open class ClientInventoryHandler<T: ScreenRendererHandler>(
     }
 
     override fun onSlotClick(slotNumber: Int, button: Int, shiftDown: Boolean) {
-        Logger.info("Clicking slot $slotNumber, pauseUpdateListening{$pauseUpdateListening}, isListeningEvents{$isListeningEvents}")
         pauseUpdateListening = true
         if (!isListeningEvents) return
         val cursorStack = playerInventory.cursorStack

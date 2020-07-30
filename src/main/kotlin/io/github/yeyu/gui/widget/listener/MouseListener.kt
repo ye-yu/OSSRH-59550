@@ -2,7 +2,7 @@ package io.github.yeyu.gui.widget.listener
 
 import io.github.yeyu.gui.ScreenRendererHandler
 
-interface MouseListener: Listener {
+interface MouseListener : Listener {
     /**
      * @implNote Invoked every time render method is invoked
      * @see io.github.yeyu.gui.ScreenRenderer.render

@@ -1,5 +1,3 @@
-import io.github.yeyu.gui.ClientScreenHandler
-import io.github.yeyu.gui.ScreenRenderer
 import io.github.yeyu.gui.ScreenRendererHandler
 import io.github.yeyu.gui.inventory.ClientInventoryHandler
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
@@ -17,17 +15,14 @@ object Screens {
             Identifier("testgui", "blockgui")
         ) { syncId: Int, playerInv: PlayerInventory ->
             ClientInventoryHandler(blockScreen!!, syncId, playerInv)
-//            if (playerInv.player.world.isClient)
-//                ClientInventoryHandler(blockScreen!!, syncId, playerInv)
-//            else ServerInventoryHandlerImpl(blockScreen!!, syncId, playerInv)
         }
     }
 
     fun registerClient() {
         ScreenRegistry.register<ScreenRendererHandler, BlockScreenRenderer>(
             blockScreen
-        ) {
-            screenRendererHandler, playerInventory, text -> BlockScreenRenderer(screenRendererHandler, playerInventory, text)
+        ) { screenRendererHandler, playerInventory, text ->
+            BlockScreenRenderer(screenRendererHandler, playerInventory, text)
         }
     }
 }

@@ -5,7 +5,7 @@ import io.github.yeyu.gui.inventory.utils.InventoryType
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
-import java.util.ArrayList
+import java.util.*
 
 interface InventoryProvider {
     val constrainedSlots: ArrayList<CapacityConstrainedSlot>

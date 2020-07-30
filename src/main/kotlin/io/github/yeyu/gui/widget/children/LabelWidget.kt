@@ -26,7 +26,7 @@ class LabelWidget(
 
     private val renderer = MinecraftClient.getInstance().textRenderer
     override val width: Int
-     get() = renderer.getWidth(label)
+        get() = renderer.getWidth(label)
     override val height: Int = renderer.fontHeight
 
     override fun render(

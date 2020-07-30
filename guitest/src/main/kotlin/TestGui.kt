@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import java.util.function.Supplier
 
-class TestGui: ModInitializer, ClientModInitializer {
+class TestGui : ModInitializer, ClientModInitializer {
 
     companion object {
         val NAMESPACE = "testgui"
@@ -27,7 +27,9 @@ class TestGui: ModInitializer, ClientModInitializer {
             Identifier(NAMESPACE, "guiblock"),
             BlockItem(
                 GUI_BLOCK, Item.Settings().group(
-                ItemGroup.MISC))
+                    ItemGroup.MISC
+                )
+            )
         )
 
         GUI_BLOCK_ENTITY = Registry.register(

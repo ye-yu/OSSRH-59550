@@ -15,13 +15,13 @@ object Classes {
     fun <T> runUnsafe(obj: Any, castTo: Class<T>, failedMsg: String?, consumer: (T) -> Unit) {
         if (!castTo.isInstance(obj)) {
             if (failedMsg != null)
-            Logger.error(failedMsg, Throwable())
+                Logger.error(failedMsg, Throwable())
             return
         }
         consumer(castTo.cast(obj))
     }
 
-    fun <T: Any> runUnsafe(obj: Any, castTo: KClass<T>, failedMsg: String?, consumer: (T) -> Unit) {
+    fun <T : Any> runUnsafe(obj: Any, castTo: KClass<T>, failedMsg: String?, consumer: (T) -> Unit) {
         if (!castTo.isInstance(obj)) {
             if (failedMsg != null)
                 Logger.error(failedMsg, Throwable())
@@ -35,7 +35,7 @@ object Classes {
         return consumer(castTo.cast(obj))
     }
 
-    fun <T: Any, V> getUnsafe(obj: Any, castTo: KClass<T>, fallback: V, consumer: (T) -> V): V {
+    fun <T : Any, V> getUnsafe(obj: Any, castTo: KClass<T>, fallback: V, consumer: (T) -> V): V {
         if (!castTo.isInstance(obj)) return fallback
         return consumer(castTo.cast(obj))
     }

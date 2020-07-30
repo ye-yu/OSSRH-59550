@@ -1,13 +1,12 @@
 package io.github.yeyu.gui.widget.children
 
-import io.github.yeyu.gui.ScreenRendererHandler
 import io.github.yeyu.gui.ScreenRenderer
+import io.github.yeyu.gui.ScreenRendererHandler
 import io.github.yeyu.gui.widget.ChildWidget
 import io.github.yeyu.gui.widget.ParentWidget
 import io.github.yeyu.gui.widget.listener.KeyListener
 import io.github.yeyu.gui.widget.listener.MouseListener
 import io.github.yeyu.util.DrawerUtil
-import io.github.yeyu.util.Logger
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.util.math.MatrixStack
@@ -49,14 +48,25 @@ abstract class AbstractTextFieldWidget(
         this.parent = parent
     }
 
-    final override fun render(matrices: MatrixStack, relativeMouseX: Int, relativeMouseY: Int, screen: ScreenRenderer<*>) {
+    final override fun render(
+        matrices: MatrixStack,
+        relativeMouseX: Int,
+        relativeMouseY: Int,
+        screen: ScreenRenderer<*>
+    ) {
         validateCursor()
         val absX = getDrawX()
         val absY = getDrawY()
 
         drawBackground(screen, matrices, absX, absY)
 
-        if (text.isNotEmpty()) textRenderer.draw(matrices, text.substring(visibleLower, visibleUpper), absX.toFloat(), absY.toFloat(), textColor)
+        if (text.isNotEmpty()) textRenderer.draw(
+            matrices,
+            text.substring(visibleLower, visibleUpper),
+            absX.toFloat(),
+            absY.toFloat(),
+            textColor
+        )
 
         if (!focused) return
         if (--caretTick < 0) {
@@ -132,7 +142,7 @@ abstract class AbstractTextFieldWidget(
         this.focused = focused
     }
 
-    final override fun isFocused(): Boolean  = focused
+    final override fun isFocused(): Boolean = focused
     final override fun isListenOffFocus(): Boolean = false
 
     final override fun <T : ScreenRendererHandler> onCharTyped(chr: Char, scanCode: Int, handler: T) {
@@ -141,7 +151,12 @@ abstract class AbstractTextFieldWidget(
         // todo: broadcast text to handler
     }
 
-    final override fun <T : ScreenRendererHandler> onKeyPressed(keyCode: Int, scanCode: Int, modifier: Int, handler: T) {
+    final override fun <T : ScreenRendererHandler> onKeyPressed(
+        keyCode: Int,
+        scanCode: Int,
+        modifier: Int,
+        handler: T
+    ) {
         if (!focused) return
         if (Screen.hasShiftDown() && !hasSelection) {
             pinSelection()
@@ -192,13 +207,22 @@ abstract class AbstractTextFieldWidget(
         // todo: broadcast text to handler
     }
 
-    final override fun <T : ScreenRendererHandler> onKeyReleased(keyCode: Int, scanCode: Int, modifier: Int, handler: T) {
+    final override fun <T : ScreenRendererHandler> onKeyReleased(
+        keyCode: Int,
+        scanCode: Int,
+        modifier: Int,
+        handler: T
+    ) {
         // does nothing
     }
 
-    final override fun <T : ScreenRendererHandler> onMouseDown(mouseX: Double, mouseY: Double, button: Int, handler: T) {
+    final override fun <T : ScreenRendererHandler> onMouseDown(
+        mouseX: Double,
+        mouseY: Double,
+        button: Int,
+        handler: T
+    ) {
         focused = isMouseOver(mouseX, mouseY)
-        Logger.info("Text field is ${if (!focused) "not " else ""}focused")
     }
 
     final override fun <T : ScreenRendererHandler> onMouseUp(mouseX: Double, mouseY: Double, button: Int, handler: T) {
@@ -213,7 +237,12 @@ abstract class AbstractTextFieldWidget(
         // odes nothing
     }
 
-    final override fun <T : ScreenRendererHandler> onMouseScroll(mouseX: Double, mouseY: Double, amount: Double, handler: T) {
+    final override fun <T : ScreenRendererHandler> onMouseScroll(
+        mouseX: Double,
+        mouseY: Double,
+        amount: Double,
+        handler: T
+    ) {
         if (focused && isMouseOver(mouseX, mouseY) && amount != 0.0) {
             moveCursor(amount < 0, Screen.hasControlDown())
         }

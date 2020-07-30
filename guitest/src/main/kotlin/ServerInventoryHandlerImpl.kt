@@ -4,7 +4,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.screen.ScreenHandlerType
 
-class ServerInventoryHandlerImpl<T: ScreenRendererHandler>(
+class ServerInventoryHandlerImpl<T : ScreenRendererHandler>(
     type: ScreenHandlerType<T>,
     syncId: Int,
     playerInventory: PlayerInventory,

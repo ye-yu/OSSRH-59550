@@ -8,7 +8,8 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerType
 
-open class ClientScreenHandler(type: ScreenHandlerType<*>, syncId: Int) : ScreenRendererHandler(type, syncId), ClientScreenHandlerPacketListener {
+open class ClientScreenHandler(type: ScreenHandlerType<*>, syncId: Int) : ScreenRendererHandler(type, syncId),
+    ClientScreenHandlerPacketListener {
 
     protected var isListeningEvents = true
 
@@ -16,7 +17,7 @@ open class ClientScreenHandler(type: ScreenHandlerType<*>, syncId: Int) : Screen
      * Irrelevant method as it is called in server side only
      * */
     final override fun canUse(player: PlayerEntity): Boolean {
-        return true;
+        return true
     }
 
     override fun onServer2Client(action: String, context: PacketContext, buf: PacketByteBuf) {

@@ -1,6 +1,6 @@
 package io.github.yeyu.gui.widget
 
-interface ChildWidget: Widget {
+interface ChildWidget : Widget {
     fun betweenIncExc(lowerBound: Int, x: Int, upperBound: Int): Boolean {
         return x in lowerBound until upperBound
     }

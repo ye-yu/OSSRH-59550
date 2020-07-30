@@ -1,8 +1,8 @@
 package io.github.yeyu.packet
 
-import io.github.yeyu.util.Logger
 import io.github.yeyu.Properties
 import io.github.yeyu.util.Classes
+import io.github.yeyu.util.Logger
 import io.netty.buffer.Unpooled
 import net.fabricmc.fabric.api.network.PacketContext
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl
@@ -30,11 +30,18 @@ object ScreenPacket {
         val action = buf.readString()
         val currentScreenHandler = context.player.currentScreenHandler
         if (currentScreenHandler.syncId != syncId) {
-            Logger.error("Sync ID is no longer in-sync with the server. Expected ${currentScreenHandler.syncId} but got $syncId instead.", Throwable())
+            Logger.error(
+                "Sync ID is no longer in-sync with the server. Expected ${currentScreenHandler.syncId} but got $syncId instead.",
+                Throwable()
+            )
             return
         }
 
-        Classes.runUnsafe(currentScreenHandler, ServerScreenHandlerPacketListener::class, "Handler cannot parse custom screen packet.") {
+        Classes.runUnsafe(
+            currentScreenHandler,
+            ServerScreenHandlerPacketListener::class,
+            "Handler cannot parse custom screen packet."
+        ) {
             it.onClient2Server(action, context, buf)
         }
     }
@@ -44,7 +51,10 @@ object ScreenPacket {
         val action = buf.readString()
         val currentScreen = MinecraftClient.getInstance().currentScreen
         if (currentScreen == null) {
-            Logger.error("Got packet from server but client screen is null. Did client send an init packet beforehand?", Throwable())
+            Logger.error(
+                "Got packet from server but client screen is null. Did client send an init packet beforehand?",
+                Throwable()
+            )
             return
         }
 
@@ -55,16 +65,29 @@ object ScreenPacket {
         }
 
         if (screenHandler.syncId != syncId) {
-            Logger.error("Sync ID is no longer in-sync with the client. Expected ${screenHandler.syncId} but got $syncId instead.", Throwable())
+            Logger.error(
+                "Sync ID is no longer in-sync with the client. Expected ${screenHandler.syncId} but got $syncId instead.",
+                Throwable()
+            )
             return
         }
 
-        Classes.runUnsafe(screenHandler, ClientScreenHandlerPacketListener::class, "Handler cannot parse custom screen packet.") {
+        Classes.runUnsafe(
+            screenHandler,
+            ClientScreenHandlerPacketListener::class,
+            "Handler cannot parse custom screen packet."
+        ) {
             it.onServer2Client(action, context, buf)
         }
     }
 
-    fun sendPacket(syncId: Int, action: String, toServer: Boolean, player: ServerPlayerEntity?, bufferWrapper: (PacketByteBuf) -> Unit) {
+    fun sendPacket(
+        syncId: Int,
+        action: String,
+        toServer: Boolean,
+        player: ServerPlayerEntity?,
+        bufferWrapper: (PacketByteBuf) -> Unit
+    ) {
         val buf = createWrappedPacket(syncId, action)
         bufferWrapper(buf)
         if (toServer) {

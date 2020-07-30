@@ -5,7 +5,6 @@ import io.github.yeyu.gui.ClickEvent
 import net.minecraft.item.ItemStack
 import java.util.stream.Collectors
 import java.util.stream.IntStream
-import kotlin.collections.HashMap
 
 object InventoryUtil {
     /**

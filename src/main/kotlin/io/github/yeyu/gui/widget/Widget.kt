@@ -20,5 +20,5 @@ interface Widget {
         screen: ScreenRenderer<*>
     )
 
-    fun setFocused(focused:Boolean)
+    fun setFocused(focused: Boolean)
 }

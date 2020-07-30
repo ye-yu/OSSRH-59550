@@ -60,7 +60,8 @@ abstract class ScreenRenderer<T : ScreenRendererHandler>(handler: T, inventory: 
     /**
      * @throws UnsupportedOperationException Use [addParent] or [addListener] instead!
      */
-    @Deprecated("Use addParent or addListener instead!",
+    @Deprecated(
+        "Use addParent or addListener instead!",
         ReplaceWith(
             "addParent(child) or addListener(child)",
             "io.github.yeyu.gui.widget.ParentWidget",
@@ -260,21 +261,24 @@ abstract class ScreenRenderer<T : ScreenRendererHandler>(handler: T, inventory: 
     /**
      *
      * */
-    @Deprecated("Delegate focus events on the widget itself!",
+    @Deprecated(
+        "Delegate focus events on the widget itself!",
         ReplaceWith("setFocused", "io.github.yeyu.gui.widget.Widget")
     )
     override fun setInitialFocus(element: Element?) {
         throw UnsupportedOperationException("Delegate focus events on the widget itself!")
     }
 
-    @Deprecated("Delegate focus events on the widget itself!",
+    @Deprecated(
+        "Delegate focus events on the widget itself!",
         ReplaceWith("onMouseDown", "io.github.yeyu.gui.widget.listener.Listener")
     )
     override fun setFocused(element: Element?) {
         throw UnsupportedOperationException("Delegate focus events on the widget itself!")
     }
 
-    @Deprecated("Delegate focus events on the widget itself!",
+    @Deprecated(
+        "Delegate focus events on the widget itself!",
         ReplaceWith("render", "io.github.yeyu.gui.widget.ParentWidget")
     )
 

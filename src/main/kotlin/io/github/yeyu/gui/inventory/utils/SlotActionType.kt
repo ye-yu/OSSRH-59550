@@ -1,6 +1,7 @@
 package io.github.yeyu.gui.inventory.utils
 
 import io.github.yeyu.gui.ClickEvent
+import io.github.yeyu.gui.inventory.utils.SlotActionType.Companion.getActionFromClickEvent
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler
 import org.lwjgl.glfw.GLFW
