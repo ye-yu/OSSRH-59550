@@ -16,9 +16,10 @@ object Screens {
         blockScreen = ScreenHandlerRegistry.registerSimple<ScreenRendererHandler>(
             Identifier("testgui", "blockgui")
         ) { syncId: Int, playerInv: PlayerInventory ->
-            if (playerInv.player.world.isClient)
-                ClientInventoryHandler(blockScreen!!, syncId, playerInv)
-            else ServerInventoryHandlerImpl(blockScreen!!, syncId, playerInv)
+            ClientInventoryHandler(blockScreen!!, syncId, playerInv)
+//            if (playerInv.player.world.isClient)
+//                ClientInventoryHandler(blockScreen!!, syncId, playerInv)
+//            else ServerInventoryHandlerImpl(blockScreen!!, syncId, playerInv)
         }
     }
 
