@@ -44,6 +44,8 @@ abstract class ServerInventoryHandler<T: ScreenRendererHandler>(
         set(value) {
             require(blockInventory == null) { "Can only initialize block inventory once!" }
             field = value
+
+            Logger.info("Initialising block inventory of size ${field!!.size()}")
             IntStream.range(playerInventory.size(), playerInventory.size() + blockInventory!!.size())
                 .forEach { i: Int ->
                     constrainedSlots.add(
@@ -332,7 +334,7 @@ abstract class ServerInventoryHandler<T: ScreenRendererHandler>(
             playerInventory.player as ServerPlayerEntity?
         ) {
             it.writeInt(blockInventory!!.size())
-            for(i in 0..blockInventory!!.size()) {
+            for(i in 0 until blockInventory!!.size()) {
                 it.writeItemStack(blockInventory!!.getStack(i))
             }
         }

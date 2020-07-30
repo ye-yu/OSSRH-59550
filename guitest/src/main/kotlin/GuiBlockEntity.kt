@@ -16,7 +16,7 @@ class GuiBlockEntity() : BlockEntity(TestGui.GUI_BLOCK_ENTITY), ImplementedInven
     }
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
-        return ServerInventoryHandlerImpl(Screens.blockScreen!!, syncId, inv)
+        return ServerInventoryHandlerImpl(Screens.blockScreen!!, syncId, inv, this)
     }
 
     override fun getDisplayName(): Text {
