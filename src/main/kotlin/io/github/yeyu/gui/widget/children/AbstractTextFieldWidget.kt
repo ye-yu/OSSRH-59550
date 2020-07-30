@@ -108,11 +108,11 @@ abstract class AbstractTextFieldWidget(
         if (visibleLower == visibleUpper || visibleLower < 0 || visibleUpper > text.length) {
             // try to get new visible index
             visibleUpper = cursor
-            visibleLower = cursor - textRenderer.trimToWidth(
+            visibleLower = (cursor - textRenderer.trimToWidth(
                 text,
                 width,
                 true
-            ).length
+            ).length).coerceAtLeast(0)
         }
 
         visibleUpper = visibleLower + textRenderer.trimToWidth(text.substring(visibleLower), width).length
@@ -298,6 +298,7 @@ abstract class AbstractTextFieldWidget(
             else -> {
                 if (cursor <= 0) return  // cant delete if it reached the start
                 text = text.substring(0, cursor - 1) + text.substring(cursor)
+                cursor = (cursor - 1).coerceAtLeast(0)
             }
         }
     }
