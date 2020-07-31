@@ -1,11 +1,12 @@
 plugins {
-    id 'fabric-loom'
-//    id 'maven-publish'
+    id "fabric-loom"
+//    id "maven-publish"
     id "org.jetbrains.kotlin.jvm"
+    id "org.jetbrains.dokka" version "0.10.1"
 }
 
-apply plugin: 'maven'
-apply plugin: 'signing'
+apply plugin: "maven"
+apply plugin: "signing"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -15,7 +16,9 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
+    jcenter()
     maven { url = "http://maven.fabricmc.net/" }
+    maven { url = "https://dl.bintray.com/kotlin/kotlin-eap" }
 }
 
 dependencies {
@@ -26,7 +29,7 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+    implementation group: "com.google.code.findbugs", name: "jsr305", version: "3.0.0"
 }
 
 processResources {
@@ -51,7 +54,7 @@ tasks.withType(JavaCompile) {
 
 task javadocJar(type: Jar) {
     getArchiveClassifier().set("javadoc")
-    from javadoc
+    from dokka
 }
 
 //task sourcesJar(type: Jar) {
@@ -95,30 +98,30 @@ uploadArchives {
             }
 
             pom.project {
-                name 'Just Another MC Gui'
-                packaging 'jar'
+                name "Just Another MC Gui"
+                packaging "jar"
                 // optionally artifactId can be defined here
-                description 'A Fabric module for widget-based GUI for Minecraft'
-                url 'https://github.com/ye-yu/OSSRH-59550'
+                description "A Fabric module for widget-based GUI for Minecraft"
+                url "https://github.com/ye-yu/OSSRH-59550"
 
                 scm {
-                    connection 'scm:git:ssh://git@github.com:ye-yu/OSSRH-59550.git'
-                    developerConnection 'scm:git:ssh://git@github.com:ye-yu/OSSRH-59550.git'
-                    url 'https://github.com/ye-yu/OSSRH-59550'
+                    connection "scm:git:ssh://git@github.com:ye-yu/OSSRH-59550.git"
+                    developerConnection "scm:git:ssh://git@github.com:ye-yu/OSSRH-59550.git"
+                    url "https://github.com/ye-yu/OSSRH-59550"
                 }
 
                 licenses {
                     license {
-                        name 'MIT'
-                        url 'https://github.com/ye-yu/OSSRH-59550/blob/master/LICENSE'
+                        name "MIT"
+                        url "https://github.com/ye-yu/OSSRH-59550/blob/master/LICENSE"
                     }
                 }
 
                 developers {
                     developer {
-                        id 'ye-yu'
-                        name 'Ye Yu'
-                        email 'rafolwen98@gmail.com'
+                        id "ye-yu"
+                        name "Ye Yu"
+                        email "rafolwen98@gmail.com"
                     }
                 }
             }
