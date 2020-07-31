@@ -1,10 +1,10 @@
 import com.mojang.blaze3d.systems.RenderSystem
-import io.github.yeyu.gui.ScreenRenderer
-import io.github.yeyu.gui.ScreenRendererHandler
-import io.github.yeyu.gui.widget.ParentWidget.AnchorType
-import io.github.yeyu.gui.widget.children.TexturedTextFieldWidget
-import io.github.yeyu.gui.widget.parents.InventoryPanel
-import io.github.yeyu.gui.widget.parents.Panel
+import io.github.yeyu.gui.handler.ScreenRendererHandler
+import io.github.yeyu.gui.renderer.ScreenRenderer
+import io.github.yeyu.gui.renderer.widget.ParentWidget.AnchorType
+import io.github.yeyu.gui.renderer.widget.children.TexturedTextFieldWidget
+import io.github.yeyu.gui.renderer.widget.parents.InventoryPanel
+import io.github.yeyu.gui.renderer.widget.parents.Panel
 import io.github.yeyu.util.TextureDrawerHelper
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
@@ -44,7 +44,8 @@ class BlockScreenRenderer(handler: ScreenRendererHandler, inventory: PlayerInven
             numberOfSlots = 9,
             cols = 9,
             horizontalAnchor = AnchorType.MIDDLE,
-            verticalAnchor = AnchorType.MIDDLE
+            verticalAnchor = AnchorType.MIDDLE,
+            name = "hotbar"
         )
 
         val textField = TexturedTextFieldWidget(
@@ -53,7 +54,8 @@ class BlockScreenRenderer(handler: ScreenRendererHandler, inventory: PlayerInven
             width = TEXT_FIELD_WIDTH - 2 * TEXTURE_PADDING,
             height = TEXT_FIELD_HEIGHT,
             focusedTexture = FOCUSED_BG,
-            outFocusedTexture = OUT_FOCUSED_BG
+            outFocusedTexture = OUT_FOCUSED_BG,
+            name = "storedText"
         )
 
         val otherPanel = Panel(
@@ -61,7 +63,8 @@ class BlockScreenRenderer(handler: ScreenRendererHandler, inventory: PlayerInven
             width = backgroundWidth,
             horizontalAnchor = AnchorType.MIDDLE,
             verticalAnchor = AnchorType.MIDDLE,
-            backgroundColor = 0
+            backgroundColor = 0,
+            name = "other-panel"
         )
 
         otherPanel.add(textField)
@@ -77,7 +80,7 @@ class BlockScreenRenderer(handler: ScreenRendererHandler, inventory: PlayerInven
 
         @Suppress("DEPRECATION")
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f)
-        client!!.textureManager.bindTexture(Companion.TEXTURE)
+        client!!.textureManager.bindTexture(TEXTURE)
         val middleX = (width - backgroundWidth) / 2
         val middleY = (height - backgroundHeight) / 2
         this.drawTexture(matrices, middleX, middleY, 0, 0, backgroundWidth, backgroundHeight)

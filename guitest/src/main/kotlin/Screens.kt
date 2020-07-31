@@ -1,5 +1,6 @@
-import io.github.yeyu.gui.ScreenRendererHandler
-import io.github.yeyu.gui.inventory.ClientInventoryHandler
+import handler.ClientInventoryHandlerImpl
+import io.github.yeyu.gui.handler.ScreenRendererHandler
+import io.github.yeyu.gui.handler.inventory.ClientInventoryHandler
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.minecraft.entity.player.PlayerInventory
@@ -14,7 +15,7 @@ object Screens {
         blockScreen = ScreenHandlerRegistry.registerSimple<ScreenRendererHandler>(
             Identifier("testgui", "blockgui")
         ) { syncId: Int, playerInv: PlayerInventory ->
-            ClientInventoryHandler(blockScreen!!, syncId, playerInv)
+            ClientInventoryHandlerImpl(blockScreen!!, syncId, playerInv)
         }
     }
 

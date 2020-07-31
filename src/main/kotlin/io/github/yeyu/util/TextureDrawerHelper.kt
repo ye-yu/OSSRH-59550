@@ -1,7 +1,7 @@
 package io.github.yeyu.util
 
 import com.mojang.blaze3d.systems.RenderSystem
-import io.github.yeyu.gui.ScreenRenderer
+import io.github.yeyu.gui.renderer.ScreenRenderer
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
