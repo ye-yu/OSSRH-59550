@@ -23,10 +23,10 @@ this module can be beneficial for you!
 jamcgui also offers a utility file to perform networking
 between the client and the server. 
 
-# Guided Steps to Build Gui
+# Simplified Steps to Build Gui
 
-You must extend the module `ScreenRenderer` and 
-`ScreenRendererHandler` based on your requirement, and then
+You must extend the `ScreenRenderer` and 
+`ScreenRendererHandler` class based on your requirement, and then
 you have to register `ScreenRendererHandler` on the server-side
 and `ScreenRenderer` on the client-side. Next, you add the
 relevant widgets in the screen renderer. Finally, you
@@ -40,19 +40,20 @@ spawn the GUI on the relevant player action.
     screen handler class. This can be useful for screen networking.
     The server screen handler must implements `ServerScreenHandlerPacketListener`
     while the client implements `ClientScreenHandlerPacketListener`.
-    Otherwise, if you want to make both sides to create the screen
+    Otherwise, if you want to make both sides to instantiate the screen
     handler of the same class, you implement both interfaces on the
-    same handler class. More networking information is in the 
+    same handler class (vanilla does this). More networking information is in the 
     [networking](#networking) section.
 
     Registering your new screen handler occurs in the fabric
     'main' mod initializer class. The registered reference
     must be accessible on the 'client' mod initializer too
-    to register the screen renderer. In the factory parameter, the
+    as a reference to register the screen renderer. In the factory parameter, the
     passed lambda expression must return the client screen handler
     given that you create separate screen handlers for the client
     and the server (otherwise, just return the same handler instance
-    for server screen handler).
+    for server screen handler). The returned value is an instance of
+    `ScreenHandlerType<your common super handler for client & server>`
     
     ```java
     public static ScreenHandlerType<ScreenRendererHandler> MY_CUSTOM_SCREEN_HANDLER;
@@ -61,11 +62,11 @@ spawn the GUI on the relevant player action.
     MY_CUSTOM_SCREEN_HANDLER = ScreenHandlerRegistry
             .registerSimple(<Identifier>,
                     (int syncId, PlayerInventory inventory) -> {
-                        return new ClientScreenHandler(...)
+                        return new ClientScreenHandler(MY_CUSTOM_SCREEN_HANDLER, ...)
                         /* or below if don't create separate handler
                            client & server
                          */
-                        return new ClientAndServerScreenHandler(...)
+                        return new ClientAndServerScreenHandler(MY_CUSTOM_SCREEN_HANDLER, ...)
                 }
             );
     ```
@@ -80,10 +81,10 @@ spawn the GUI on the relevant player action.
     Extend `ScreenRenderer` and override `init()` method. In
     this method, you put in the relevant parent widgets and
     listeners into the renderer instance. Parent widgets are
-    panels, etc, so they take in child widgets instead. 
+    panels, etc, and they take in child widgets. 
     For this reason, screen renderer is not responsible
     for drawing child widgets, and we delegate this take to
-    parent widgets. So, screen renderer must take in parent
+    parent widgets instead. So, screen renderer must take in parent
     widget instance through `addParent` method.
 
     Widgets that listen to client event must be added 
@@ -96,7 +97,7 @@ spawn the GUI on the relevant player action.
     When you are finally done with the widgets, you register
     the screen renderer into the client mod initializer.
     Pass in the screen handler type registered in the
-    'main' mod initializer.
+    'main' mod initializer in the previous step.
     
     ```java
     ScreenRegistry.<ScreenRendererHandler, BlockScreenRenderer>register(
@@ -122,7 +123,11 @@ spawn the GUI on the relevant player action.
     ```java
    	@Override
    	public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-   		return new BlockScreenHandler(MY_CUSTOM_SCREEN_HANDLER, syncId, inv);
+   		return new ServerScreenHandler(MY_CUSTOM_SCREEN_HANDLER, syncId, inv);
+        /* or below if don't create separate handler
+           client & server
+         */
+        return new ClientAndServerScreenHandler(MY_CUSTOM_SCREEN_HANDLER, ...)
    	}
     ```
     
@@ -146,11 +151,19 @@ spawn the GUI on the relevant player action.
 
 ## <a name="networking"></a> Networking
 
+Networking can be useful for GUI that manipulates
+gameplay. The server relies on the client packets
+to drive the gameplay, and the client also relies
+on packets to render the gameplay on the screen.
+
 The first thing to remember in networking is
 handshakes. You can't send packets to client
 if client has not initialised a GUI. The package
 provided a utility file [ScreenPacket](src/main/kotlin/io/github/yeyu/packet/ScreenPacket.kt)
-for a manageable packet communication.
+for a manageable packet communication. In this
+example, we are going to send an 'init' packet 
+to the server to tell that the client can now
+receive screen-related packets.
 
 To send an 'init' packet to the server, the client
 can use the method `ScreenPacket#sendPacket`. The
@@ -179,9 +192,29 @@ public void onClient2Server(String action, PacketContext context, PacketByteBuf 
 }
 ```
 
+'init' packet can be useful to start sending properties
+that is not easily accessible on the client-side
+such as entity inventories. The client does not
+have access to the server entity instance, so it
+cannot access the entity inventories as soon as
+the client open an entity GUI. Since the entity
+instance resides on the server-side, the server
+can read the entity inventories information and 
+broadcast this information to the client. 
+However, if the server sends the packets before
+the client gets to open the entity GUI, the packet
+will be lost. That is why 'init' packet is crucial.
+
+There are several other ways packets can be used
+to manipulate gameplay. Take a look at the example
+from the appended related reference.
+
 Related reference:
   - [(Kotlin) Extending client screen handler](guitest/src/main/kotlin/handler/ClientInventoryHandlerImpl.kt)
   - [(Kotlin) Extending server screen handler](guitest/src/main/kotlin/handler/ServerInventoryHandlerImpl.kt)
+
+
+# Footnote
 
 There are more pre-implemented widgets and screen handlers
 that could be useful for most cases. A wiki will be added
