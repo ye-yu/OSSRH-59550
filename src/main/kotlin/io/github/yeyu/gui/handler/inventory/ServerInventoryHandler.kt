@@ -279,7 +279,8 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
                 onSingleSlotClickEvent(buf.readInt(), button, hasShiftDown)
             } else {
                 clickedSlots.clear()
-                IntStream.range(0, clickSize).map { i: Int -> buf.readInt() }
+                IntStream.range(0, clickSize)
+                    .map { buf.readInt() }
                     .forEach { e: Int -> clickedSlots.add(e) }
                 onMultipleSlotClickEvent(clickedSlots, button, hasShiftDown)
             }
