@@ -1,8 +1,11 @@
 plugins {
     id 'fabric-loom'
-    id 'maven-publish'
+//    id 'maven-publish'
     id "org.jetbrains.kotlin.jvm"
 }
+
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -46,6 +49,16 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
+task javadocJar(type: Jar) {
+    getArchiveClassifier().set("javadoc")
+    from javadoc
+}
+
+//task sourcesJar(type: Jar) {
+//    getArchiveClassifier().set("sources")
+//    from sourceSets.main.allSource
+//}
+
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 // if it is present.
 // If you remove this task, sources will not be generated.
@@ -56,33 +69,60 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
 jar {
     from "LICENSE"
 }
 
-// configure the maven publication
-publishing {
-    publications {
-        //noinspection GroovyAssignabilityCheck
-        mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            //noinspection GroovyAssignabilityCheck
-            artifact(remapJar) {
-                //noinspection GroovyAssignabilityCheck
-                builtBy remapJar
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: project.sonatypeUsername, password: project.sonatypePassword)
             }
-            //noinspection GroovyAssignabilityCheck
-            artifact(sourcesJar) {
-                //noinspection GroovyAssignabilityCheck
-                builtBy remapSourcesJar
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: project.sonatypeUsername, password: project.sonatypePassword)
+            }
+
+            pom.project {
+                name 'Just Another MC Gui'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'A Fabric module for widget-based GUI for Minecraft'
+                url 'https://github.com/ye-yu/OSSRH-59550'
+
+                scm {
+                    connection 'scm:git:ssh://git@github.com:ye-yu/OSSRH-59550.git'
+                    developerConnection 'scm:git:ssh://git@github.com:ye-yu/OSSRH-59550.git'
+                    url 'https://github.com/ye-yu/OSSRH-59550'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://github.com/ye-yu/OSSRH-59550/blob/master/LICENSE'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'ye-yu'
+                        name 'Ye Yu'
+                        email 'rafolwen98@gmail.com'
+                    }
+                }
             }
         }
-    }
-
-    // select the repositories you want to publish to
-    repositories {
-        // uncomment to publish to the local maven
-        mavenLocal()
     }
 }
 
