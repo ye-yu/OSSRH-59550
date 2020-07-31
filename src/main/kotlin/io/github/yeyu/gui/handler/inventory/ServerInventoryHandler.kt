@@ -211,7 +211,6 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
             calculatedStack.forEach { (slotNumber: Int, itemStack: ItemStack) ->
                 constrainedSlots[slotNumber].setStack(itemStack, true)
             }
-            sendContentUpdates() // todo: remove, since this is called on every tick
         } else {
             Logger.warn("Received empty click events.")
         }
@@ -249,7 +248,6 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
             playerInventory.player.dropItem(drop, false, true)
             targetStack.decrement(1)
         }
-        sendCursorStackUpdate() // todo: remove
     }
 
     override fun getStack(slot: Int): ItemStack {

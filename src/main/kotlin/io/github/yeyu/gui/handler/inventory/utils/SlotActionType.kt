@@ -69,7 +69,7 @@ enum class SlotActionType {
      *
      * When the action type is throw, the click data determines whether to throw a whole stack (1) or a single item from that stack (0).
      */
-    THROW_ONE,  // TODO: Make keyed action
+    THROW_ONE,  // TODO: move from onThrowItem to onSingleSlotAction
 
     /**
      * Throws the item out of the inventory. This is usually triggered by the player pressing Q while hovering over a slot, or clicking outside the window.
@@ -77,7 +77,7 @@ enum class SlotActionType {
      *
      * When the action type is throw, the click data determines whether to throw a whole stack (1) or a single item from that stack (0).
      */
-    THROW_ALL,  // TODO: Make keyed action
+    THROW_ALL,  // TODO: move from onThrowItem to onSingleSlotAction
 
     /**
      * Distributes the items in the player cursor stack among the dragged slots, effectively an alias to [net.minecraft.screen.slot.SlotActionType.QUICK_CRAFT].
