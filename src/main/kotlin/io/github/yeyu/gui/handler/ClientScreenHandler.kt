@@ -8,6 +8,11 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerType
 
+/**
+ * Client screen handler
+ *
+ * Note: Register this class in the fabric 'main' mod initializer
+ * */
 open class ClientScreenHandler(type: ScreenHandlerType<*>, syncId: Int) : ScreenRendererHandler(type, syncId),
     ClientScreenHandlerPacketListener {
 
@@ -23,6 +28,10 @@ open class ClientScreenHandler(type: ScreenHandlerType<*>, syncId: Int) : Screen
     override fun onServer2Client(action: String, context: PacketContext, buf: PacketByteBuf) {
     }
 
+    /**
+     * Sends init packet to notify server that the client
+     * has opened the screen
+     * */
     fun sendInitPacket() {
         ScreenPacket.sendPacket(syncId, PacketActions.init, true, null) {}
     }

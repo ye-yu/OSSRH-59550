@@ -2,6 +2,9 @@ package io.github.yeyu.gui.renderer.widget.listener
 
 import io.github.yeyu.gui.handler.ScreenRendererHandler
 
+/**
+ * Keyboard and character input listener
+ * */
 interface KeyListener : Listener {
     fun <T : ScreenRendererHandler> onKeyPressed(
         keyCode: Int,

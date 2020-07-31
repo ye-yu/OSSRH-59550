@@ -1,6 +1,6 @@
 package io.github.yeyu.gui.handler.inventory
 
-import io.github.yeyu.gui.ClickEvent
+import io.github.yeyu.gui.renderer.widget.ClickEvent
 import io.github.yeyu.gui.handler.ClientScreenHandler
 import io.github.yeyu.gui.handler.ScreenRendererHandler
 import io.github.yeyu.gui.handler.inventory.utils.CapacityConstrainedSlot
@@ -19,8 +19,14 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerType
 import java.util.*
 import java.util.stream.IntStream
-
-open class ClientInventoryHandler<T : ScreenRendererHandler>(
+// todo: create abstract method for initBlockInventory
+/**
+ * Implemented client inventory handler
+ *
+ * Note: Extends to update the block inventory
+ * on server block inventory update packet
+ * */
+abstract class ClientInventoryHandler<T : ScreenRendererHandler>(
     type: ScreenHandlerType<T>, syncId: Int, override val playerInventory: PlayerInventory
 ) : ClientScreenHandler(type, syncId),
     ClientInventoryInteractionListener, InventoryProvider {
@@ -34,7 +40,8 @@ open class ClientInventoryHandler<T : ScreenRendererHandler>(
 
     override var clickedSlots: LinkedHashSet<Int> = LinkedHashSet()
     override val calculatedStack: HashMap<Int, ItemStack> = HashMap()
-    override var clickEvent: ClickEvent = ClickEvent(-1, false)
+    override var clickEvent: ClickEvent =
+        ClickEvent(-1, false)
     override var clickedItem: ItemStack = ItemStack.EMPTY
     override fun getStack(slot: Int): ItemStack {
         return constrainedSlots[slot].stack

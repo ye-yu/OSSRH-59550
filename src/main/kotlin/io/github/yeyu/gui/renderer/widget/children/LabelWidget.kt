@@ -7,6 +7,9 @@ import io.github.yeyu.util.DrawerUtil
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
 
+/**
+ * A static label widget
+ * */
 class LabelWidget(
     override val relativeX: Int = 0,
     override val relativeY: Int = 0,

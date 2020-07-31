@@ -3,6 +3,11 @@ package io.github.yeyu.util
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
+/**
+ * A logger util, so that you don't have
+ * to construct static properties for
+ * logger for every class
+ * */
 object Logger {
 
     private val loggers = HashMap<String, Logger>()

@@ -23,6 +23,9 @@ import org.lwjgl.opengl.GL11
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * A modified handled screen to cater widget & listener features
+ * */
 abstract class ScreenRenderer<T : ScreenRendererHandler>(handler: T, inventory: PlayerInventory, title: Text?) :
     HandledScreen<T>(handler, inventory, title) {
 

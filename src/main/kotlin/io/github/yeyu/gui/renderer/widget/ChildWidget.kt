@@ -1,5 +1,11 @@
 package io.github.yeyu.gui.renderer.widget
 
+/**
+ * A child widget
+ *
+ * Note: Add child widget to a parent widget
+ * to render widget on the screen.
+ * */
 interface ChildWidget : Widget {
     fun betweenIncExc(lowerBound: Int, x: Int, upperBound: Int): Boolean {
         return x in lowerBound until upperBound

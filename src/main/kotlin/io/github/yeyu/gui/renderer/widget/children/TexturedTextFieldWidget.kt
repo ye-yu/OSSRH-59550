@@ -5,6 +5,11 @@ import io.github.yeyu.util.DrawerUtil
 import io.github.yeyu.util.TextureDrawerHelper
 import net.minecraft.client.util.math.MatrixStack
 
+/**
+ * A textured text field widget
+ *
+ * @see AbstractTextFieldWidget
+ * */
 class TexturedTextFieldWidget(
     relativeX: Int = 0,
     relativeY: Int = 0,

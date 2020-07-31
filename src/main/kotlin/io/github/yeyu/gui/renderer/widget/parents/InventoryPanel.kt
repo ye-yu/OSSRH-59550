@@ -11,6 +11,22 @@ import io.github.yeyu.gui.renderer.widget.listener.MouseListener
 import net.minecraft.client.util.math.MatrixStack
 import java.util.stream.IntStream
 
+/**
+ * Pre-implemented panel for inventories with
+ * standard square size of 18 pixels.
+ *
+ * Renders each item slot when the slot
+ * number returns an item stack from
+ * the handler.
+ *
+ * Note: Renders nothing when
+ * the given slot index and number of
+ * slots is invalid. Check inventory
+ * slots implementation of
+ * [io.github.yeyu.gui.handler.listener.ClientInventoryInteractionListener.hasStack]
+ *
+ * @see io.github.yeyu.gui.handler.listener.ClientInventoryInteractionListener.hasStack
+ * */
 class InventoryPanel(
     override val relativeX: Int = 0,
     override val relativeY: Int = 0,

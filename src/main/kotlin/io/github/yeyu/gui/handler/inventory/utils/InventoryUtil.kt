@@ -1,7 +1,7 @@
 package io.github.yeyu.gui.handler.inventory.utils
 
 import com.google.common.base.Preconditions
-import io.github.yeyu.gui.ClickEvent
+import io.github.yeyu.gui.renderer.widget.ClickEvent
 import net.minecraft.item.ItemStack
 import java.util.stream.Collectors
 import java.util.stream.IntStream

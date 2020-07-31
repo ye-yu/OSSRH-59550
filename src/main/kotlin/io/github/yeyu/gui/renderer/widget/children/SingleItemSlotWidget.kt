@@ -16,6 +16,9 @@ import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
 
+/**
+ * An interactive single item slot widget
+ * */
 class SingleItemSlotWidget(
     override val relativeX: Int = 0,
     override val relativeY: Int = 0,

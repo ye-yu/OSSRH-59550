@@ -16,7 +16,7 @@ import net.minecraft.client.util.math.MatrixStack
 
 /**
  * Useful for sending item throw event outside of the
- * gui.
+ * gui when rendering multiple panels.
  * */
 class OutBoundClickListener(
     override val relativeX: Int,

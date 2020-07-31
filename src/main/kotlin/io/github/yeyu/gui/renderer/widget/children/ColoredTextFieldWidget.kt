@@ -4,6 +4,10 @@ import io.github.yeyu.gui.renderer.ScreenRenderer
 import io.github.yeyu.util.DrawerUtil
 import net.minecraft.client.util.math.MatrixStack
 
+/**
+ * A colored text field widget
+ * @see AbstractTextFieldWidget
+ * */
 class ColoredTextFieldWidget(
     relativeX: Int = 0,
     relativeY: Int = 0,

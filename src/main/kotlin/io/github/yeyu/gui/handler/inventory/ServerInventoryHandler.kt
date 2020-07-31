@@ -1,6 +1,6 @@
 package io.github.yeyu.gui.handler.inventory
 
-import io.github.yeyu.gui.ClickEvent
+import io.github.yeyu.gui.renderer.widget.ClickEvent
 import io.github.yeyu.gui.handler.ScreenRendererHandler
 import io.github.yeyu.gui.handler.ServerScreenHandler
 import io.github.yeyu.gui.handler.inventory.utils.CapacityConstrainedSlot
@@ -25,10 +25,12 @@ import java.util.stream.IntStream
 import kotlin.collections.HashMap
 import kotlin.collections.LinkedHashSet
 
-
 /**
- * Extend to initialize block inventory
- */
+ * Implemented server inventory handler
+ *
+ * Note: Extends to send update of the block
+ * inventory to client
+ * */
 abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
     type: ScreenHandlerType<T>,
     syncId: Int,
@@ -68,7 +70,8 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
     override val constrainedSlots: ArrayList<CapacityConstrainedSlot> = ArrayList()
     override var clickedSlots: LinkedHashSet<Int> = LinkedHashSet()
     override val calculatedStack: HashMap<Int, ItemStack> = HashMap()
-    override var clickEvent: ClickEvent = ClickEvent(-1, false)
+    override var clickEvent: ClickEvent =
+        ClickEvent(-1, false)
     override var clickedItem: ItemStack = ItemStack.EMPTY
 
     init {

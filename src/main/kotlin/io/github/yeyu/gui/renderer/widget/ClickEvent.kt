@@ -1,7 +1,10 @@
-package io.github.yeyu.gui
+package io.github.yeyu.gui.renderer.widget
 
 import org.lwjgl.glfw.GLFW
 
+/**
+ * A click event data
+ * */
 data class ClickEvent(val button: Int, val hasShiftDown: Boolean) {
 
     override fun hashCode(): Int {

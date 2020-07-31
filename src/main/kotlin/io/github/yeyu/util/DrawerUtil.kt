@@ -6,7 +6,19 @@ import net.minecraft.client.render.Tessellator
 import net.minecraft.client.render.VertexFormats
 import org.lwjgl.opengl.GL11
 
+/**
+ * Screen drawing utility file
+ * */
 object DrawerUtil {
+    /**
+     * Draws a colored rectangle on the screen
+     * @param left the pixel coord from the left
+     * @param top the pixel coord from the top
+     * @param width the rectangle width
+     * @param height the rectangle height
+     * @param color the integer color
+     * @see constructColor
+     * */
     fun coloredRect(left: Int, top: Int, width: Int, height: Int, color: Int) {
         var fixedWidth = width
         var fixedHeight = height
@@ -36,9 +48,13 @@ object DrawerUtil {
         RenderSystem.disableBlend()
     }
 
+    /**
+     * Invert the color of the specified rectangle
+     * */
     fun invertedRect(x: Int, y: Int, width: Int, height: Int) {
         val tessellator = Tessellator.getInstance()
         val buf = tessellator.buffer
+        @Suppress("DEPRECATION")
         RenderSystem.color4f(0.0f, 0.0f, 255.0f, 255.0f)
         RenderSystem.disableTexture()
         RenderSystem.enableColorLogicOp()
@@ -53,7 +69,14 @@ object DrawerUtil {
         RenderSystem.enableTexture()
     }
 
-
+    /**
+     * Note: Overflows are unchecked. Make sure the passed values
+     * are in the range of an unsigned byte: [0, 256)
+     * @param r the red channel intensity
+     * @param g the green channel intensity
+     * @param b the blue channel intensity
+     * @param a the alpha channel intensity (opacity)
+     * */
     fun constructColor(r: Int, g: Int, b: Int, a: Int): Int {
         return (a shl 24) + (r shl 16) + (g shl 8) + b
     }

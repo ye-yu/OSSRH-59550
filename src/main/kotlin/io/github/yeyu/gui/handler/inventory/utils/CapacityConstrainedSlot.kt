@@ -8,6 +8,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.screen.slot.Slot
 import java.util.function.Predicate
 
+/**
+ * A slot that has a capacity constraint
+ * less than or equal to the original item
+ * max capacity
+ * */
 class CapacityConstrainedSlot(inventory: Inventory, index: Int, val slotNumber: Int) :
     Slot(inventory, index, 0, 0) {
     protected var stackCapacity = 64 // default max stack size

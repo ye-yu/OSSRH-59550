@@ -1,5 +1,10 @@
 package io.github.yeyu.gui.handler.inventory
 
+/**
+ * The provided inventory packet action identifiers
+ * for easy reference for the client and
+ * the server
+ * */
 object InventoryPacket {
     const val BLOCK_INV_UPDATE = "block-inv-update"
     const val CURSOR_UPDATE = "cursor-update"

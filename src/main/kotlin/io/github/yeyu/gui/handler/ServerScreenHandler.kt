@@ -8,6 +8,13 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerType
 
+/**
+ * Server screen handler
+ *
+ * Note: Instantiate this class on player open handle screen method
+ *
+ * @see net.minecraft.screen.NamedScreenHandlerFactory
+ * */
 open class ServerScreenHandler(type: ScreenHandlerType<*>, syncId: Int) : ScreenRendererHandler(type, syncId),
     ServerScreenHandlerPacketListener {
 
@@ -21,6 +28,9 @@ open class ServerScreenHandler(type: ScreenHandlerType<*>, syncId: Int) : Screen
         }
     }
 
+    /**
+     * Executed when the client has sent an init packet
+     * */
     open fun clientHasInit() {
         Logger.info("Client has init.")
     }

@@ -4,8 +4,10 @@ import io.github.yeyu.gui.handler.ScreenRendererHandler
 import io.github.yeyu.gui.renderer.ScreenRenderer
 
 /**
- * For parent widgets, [relativeX] and [relativeY] are effectively
+ * Note: [relativeX] and [relativeY] are effectively
  * the screen coordinates
+ *
+ * @see ScreenRenderer.render
  * */
 interface ParentWidget : Widget {
     val horizontalAnchor: AnchorType

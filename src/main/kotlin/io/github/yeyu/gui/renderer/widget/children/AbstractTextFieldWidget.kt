@@ -16,6 +16,10 @@ import net.minecraft.client.util.math.MatrixStack
 import org.apache.commons.lang3.StringUtils
 import org.lwjgl.glfw.GLFW
 
+/**
+ * A text field widget
+ * with text field functionality
+ * */
 abstract class AbstractTextFieldWidget(
     override val relativeX: Int = 0,
     override val relativeY: Int = 0,

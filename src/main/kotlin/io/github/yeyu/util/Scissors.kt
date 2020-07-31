@@ -7,8 +7,6 @@ import java.util.stream.Collectors
 
 /**
  * Contains a stack for GL scissors for restricting the drawn area of a widget.
- *
- * @since 2.0.0
  */
 object Scissors {
     private val STACK = ArrayDeque<Frame>()

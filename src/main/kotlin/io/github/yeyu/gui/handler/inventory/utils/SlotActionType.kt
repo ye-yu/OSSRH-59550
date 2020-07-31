@@ -1,6 +1,6 @@
 package io.github.yeyu.gui.handler.inventory.utils
 
-import io.github.yeyu.gui.ClickEvent
+import io.github.yeyu.gui.renderer.widget.ClickEvent
 import io.github.yeyu.gui.handler.inventory.utils.SlotActionType.Companion.getActionFromClickEvent
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler

@@ -13,6 +13,9 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 
+/**
+ * A packet utility for screen networking
+ * */
 object ScreenPacket {
 
     val S2CID = Identifier(Properties.NAMESPACE, "s2c")
@@ -81,6 +84,14 @@ object ScreenPacket {
         }
     }
 
+    /**
+     * Sends screen packet between the client and the server
+     * @param syncId the handler sync id
+     * @param action the action identifier
+     * @param toServer set to `true` if sending packet to server, otherwise `false`
+     * @param player set to `null` if sending packet to server, otherwise the target player to send the packet to
+     * @param bufferWrapper a consumer lambda to append extra data to the packet buffer
+     * */
     fun sendPacket(
         syncId: Int,
         action: String,

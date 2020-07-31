@@ -8,6 +8,10 @@ import io.github.yeyu.gui.renderer.widget.ParentWidget.AnchorType
 import io.github.yeyu.util.DrawerUtil
 import net.minecraft.client.util.math.MatrixStack
 
+/**
+ * A standard parent panel
+ * that renders child widgets
+ * */
 open class Panel(
     override val relativeX: Int = 0,
     override val relativeY: Int = 0,
