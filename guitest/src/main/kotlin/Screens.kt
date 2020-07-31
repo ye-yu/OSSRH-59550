@@ -1,6 +1,5 @@
 import handler.ClientInventoryHandlerImpl
 import io.github.yeyu.gui.handler.ScreenRendererHandler
-import io.github.yeyu.gui.handler.inventory.ClientInventoryHandler
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.minecraft.entity.player.PlayerInventory

@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "io.github.yeyu.MCGui"
+      "io.github.yeyu.MCGuiMain"
     ],
     "main": [
-      "io.github.yeyu.MCGui"
+      "io.github.yeyu.MCGuiMain"
     ]
   },
   "mixins": [
