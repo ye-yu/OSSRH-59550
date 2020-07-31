@@ -71,8 +71,8 @@ spawn the GUI on the relevant player action.
     ```
    
    Related reference:
-     - [(Kotlin) Extending client screen handler](src/main/kotlin/io/github/yeyu/gui/inventory/ClientInventoryHandler.kt)
-     - [(Kotlin) Extending server screen handler](src/main/kotlin/io/github/yeyu/gui/inventory/ServerInventoryHandler.kt)
+     - [(Kotlin) Extending client screen handler](guitest/src/main/kotlin/handler/ClientInventoryHandlerImpl.kt)
+     - [(Kotlin) Extending server screen handler](guitest/src/main/kotlin/handler/ServerInventoryHandlerImpl.kt)
      - [(Kotlin) Registering `blockScreen`](guitest/src/main/kotlin/Screens.kt)
 
 2. Extending & Registering `ScreenRenderer`
@@ -180,8 +180,8 @@ public void onClient2Server(String action, PacketContext context, PacketByteBuf 
 ```
 
 Related reference:
-  - [(Kotlin) Extending client screen handler](src/main/kotlin/io/github/yeyu/gui/inventory/ClientInventoryHandler.kt)
-  - [(Kotlin) Extending server screen handler](src/main/kotlin/io/github/yeyu/gui/inventory/ServerInventoryHandler.kt)
+  - [(Kotlin) Extending client screen handler](guitest/src/main/kotlin/handler/ClientInventoryHandlerImpl.kt)
+  - [(Kotlin) Extending server screen handler](guitest/src/main/kotlin/handler/ServerInventoryHandlerImpl.kt)
 
 There are more pre-implemented widgets and screen handlers
 that could be useful for most cases. A wiki will be added
