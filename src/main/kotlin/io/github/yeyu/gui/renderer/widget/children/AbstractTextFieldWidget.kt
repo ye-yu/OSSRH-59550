@@ -212,8 +212,7 @@ abstract class AbstractTextFieldWidget(
                 }
             }
         }
-
-        // todo: broadcast text to handler
+        Classes.runUnsafe(handler, StringListener::class, null) { it.onStringChange(text, name) }
     }
 
     final override fun <T : ScreenRendererHandler> onKeyReleased(
