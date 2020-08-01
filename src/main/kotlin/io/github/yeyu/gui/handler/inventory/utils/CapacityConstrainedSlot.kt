@@ -2,22 +2,22 @@ package io.github.yeyu.gui.handler.inventory.utils
 
 import com.google.common.base.Preconditions
 import io.github.yeyu.util.Classes
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.slot.Slot
-import java.util.function.Predicate
 
 /**
  * A slot that has a capacity constraint
  * less than or equal to the original item
  * max capacity
  * */
-class CapacityConstrainedSlot(inventory: Inventory, index: Int, val slotNumber: Int) :
+class CapacityConstrainedSlot(inventory: Inventory, index: Int, private val slotNumber: Int) :
     Slot(inventory, index, 0, 0) {
-    protected var stackCapacity = 64 // default max stack size
-    protected var predicate =
-        Predicate<ItemStack> { true }
+    private var stackCapacity = 64 // default max stack size
+    var takePredicate: (PlayerEntity) -> Boolean = { true }
+    var insertPredicate: (ItemStack) -> Boolean = { true }
 
     /**
      * @return the remaining stack that exceeds the capacity
@@ -53,14 +53,14 @@ class CapacityConstrainedSlot(inventory: Inventory, index: Int, val slotNumber: 
      * @see .canCombine
      */
     override fun canInsert(stack: ItemStack): Boolean {
-        if (getStack().isEmpty) return true
-        if (stack.isEmpty) return true
+        if (getStack().isEmpty) return insertPredicate(stack)
+        if (stack.isEmpty) return insertPredicate(stack)
         if (!canCombine(stack)) return false
         val sidedCanInsert = Classes.getUnsafe(inventory, SidedInventory::class.java, true) {
             it.canInsert(slotNumber, stack, null)
         }
         return if (!sidedCanInsert) false
-        else predicate.test(stack)
+        else insertPredicate(stack)
     }
 
     /**
@@ -112,11 +112,15 @@ class CapacityConstrainedSlot(inventory: Inventory, index: Int, val slotNumber: 
 
     val isFull: Boolean
         get() {
-            val capacity = Math.min(stack.item.maxCount, getCapacity())
+            val capacity = stack.item.maxCount.coerceAtMost(getCapacity())
             return capacity == stack.count
         }
 
     val isEmpty: Boolean
         get() = stack.isEmpty
 
+    override fun canTakeItems(playerEntity: PlayerEntity): Boolean {
+        if (takePredicate(playerEntity)) return super.canTakeItems(playerEntity)
+        return false
+    }
 }

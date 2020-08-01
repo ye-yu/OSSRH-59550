@@ -97,10 +97,12 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
 
         when (action) {
             PICKUP_ALL -> {
+                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return
                 constrainedSlots[slotNumber].clear()
                 playerInventory.cursorStack = targetStack
             }
             PICKUP_HALF -> {
+                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return
                 val half = targetStack.count / 2
                 targetStack.decrement(half)
                 playerInventory.cursorStack = targetStack
@@ -109,10 +111,12 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
                 constrainedSlots[slotNumber].setStack(newTarget, true)
             }
             PLACE_ALL -> {
+                if (!constrainedSlots[slotNumber].insertPredicate(cursorStack)) return
                 val leftOvers = constrainedSlots[slotNumber].insertItem(cursorStack)
                 playerInventory.cursorStack = leftOvers
             }
             PLACE_ONE -> if (canStacksCombine(cursorStack, targetStack)) {
+                if (!constrainedSlots[slotNumber].insertPredicate(cursorStack)) return
                 targetStack.increment(1)
                 cursorStack.decrement(1)
             } else {
@@ -124,6 +128,9 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
                 }
             }
             CURSOR_SWAP -> {
+                // only allows when player can take & item can be inserted
+                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return
+                if (!constrainedSlots[slotNumber].insertPredicate(cursorStack)) return
                 constrainedSlots[slotNumber].clear()
                 val extra = constrainedSlots[slotNumber].insertItem(cursorStack)
                 // todo: testing on capacity constrained slot
@@ -135,6 +142,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
                 }
             }
             QUICK_MOVE -> {
+                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return
                 val inventoryType: InventoryType = getInventoryOfIndex(slotNumber)
                 val remaining: ItemStack
                 remaining = if (inventoryType === InventoryType.BLOCK) { // target slot is block inventory

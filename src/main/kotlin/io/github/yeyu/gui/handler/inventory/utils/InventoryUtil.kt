@@ -114,8 +114,8 @@ object InventoryUtil {
         forward: Boolean
     ): ItemStack {
         val targetStack = referenceSlot[slotNumber].stack
-        Preconditions.checkArgument(targetSize > 0)
-        Preconditions.checkArgument(targetIndex >= 0)
+        check(targetSize > 0)
+        check(targetIndex >= 0)
         if (targetStack.isEmpty) return ItemStack.EMPTY
         if (targetSize == 1) return targetStack
         calculatedStack.clear()
