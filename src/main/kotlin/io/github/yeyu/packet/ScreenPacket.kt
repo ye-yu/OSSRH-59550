@@ -20,6 +20,7 @@ object ScreenPacket {
 
     val S2CID = Identifier(Properties.NAMESPACE, "s2c")
     val C2SID = Identifier(Properties.NAMESPACE, "c2s")
+    val suppressed = ArrayList<String>()
 
     private fun createWrappedPacket(syncId: Int, action: String): PacketByteBuf {
         val wrappedBuf = PacketByteBuf(Unpooled.buffer())
@@ -54,10 +55,13 @@ object ScreenPacket {
         val action = buf.readString()
         val currentScreen = MinecraftClient.getInstance().currentScreen
         if (currentScreen == null) {
-            Logger.error(
-                "Got packet from server but client screen is null. Did client send an init packet beforehand?",
-                Throwable()
-            )
+            if (action !in suppressed) {
+                Logger.error(
+                    "Got packet from server but client screen is null. Did client send an init packet beforehand?",
+                    Throwable()
+                )
+                suppressed.add(action)
+            }
             return
         }
 
