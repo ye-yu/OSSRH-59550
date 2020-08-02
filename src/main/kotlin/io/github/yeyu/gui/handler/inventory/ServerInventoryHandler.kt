@@ -108,7 +108,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
                 playerInventory.cursorStack = targetStack
                 val newTarget = targetStack.copy()
                 newTarget.count = half
-                constrainedSlots[slotNumber].setStack(newTarget, true)
+                constrainedSlots[slotNumber].stack = newTarget
             }
             PLACE_ALL -> {
                 if (!constrainedSlots[slotNumber].insertPredicate(cursorStack)) return
@@ -123,7 +123,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
                 if (targetStack.isEmpty) {
                     val toInsert = cursorStack.copy()
                     toInsert.count = 1
-                    constrainedSlots[slotNumber].setStack(toInsert, true)
+                    constrainedSlots[slotNumber].stack = toInsert
                     cursorStack.decrement(1)
                 }
             }
@@ -189,7 +189,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
                         )
                     }
                 }
-                constrainedSlots[slotNumber].setStack(remaining, true)
+                constrainedSlots[slotNumber].stack = remaining
                 calculatedStack.forEach { (index: Int, stack: ItemStack) ->
                     check(
                         constrainedSlots[index].insertItem(stack).isEmpty
@@ -220,7 +220,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
             )
             playerInventory.cursorStack = newCursorStack
             calculatedStack.forEach { (slotNumber: Int, itemStack: ItemStack) ->
-                constrainedSlots[slotNumber].setStack(itemStack, true)
+                constrainedSlots[slotNumber].stack = itemStack
             }
         } else {
             Logger.warn("Received empty click events.")

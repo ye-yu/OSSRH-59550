@@ -7,6 +7,7 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.slot.Slot
+import kotlin.math.min
 
 /**
  * A slot that has a capacity constraint
@@ -23,13 +24,13 @@ class CapacityConstrainedSlot(inventory: Inventory, index: Int, private val slot
      * @return the remaining stack that exceeds the capacity
      */
     fun insertItem(item: ItemStack): ItemStack {
-        val capacity = Math.min(item.item.maxCount, getCapacity())
+        val capacity = min(item.item.maxCount, getCapacity())
         if (!canInsert(item)) return item
         val currentStack = stack
         return if (currentStack.isEmpty) {
             if (item.count > capacity) {
                 val toInsert = item.copy()
-                toInsert.cooldown = capacity
+                toInsert.count = capacity
                 stack = toInsert
                 item.decrement(capacity)
                 item
@@ -50,9 +51,9 @@ class CapacityConstrainedSlot(inventory: Inventory, index: Int, private val slot
     /**
      * @return true if the incoming stack can be inserted
      * regardless of slot capacity
-     * @see .canCombine
+     * @see canCombine
      */
-    override fun canInsert(stack: ItemStack): Boolean {
+    override fun canInsert(stack: ItemStack): Boolean { // todo: check item cannot be inserted when swapping
         if (getStack().isEmpty) return insertPredicate(stack)
         if (stack.isEmpty) return insertPredicate(stack)
         if (!canCombine(stack)) return false
@@ -73,20 +74,24 @@ class CapacityConstrainedSlot(inventory: Inventory, index: Int, private val slot
     }
 
     /**
-     * @throws IllegalArgumentException when the incoming stack cannot be inserted into the slot
-     * @throws IllegalStateException    when the slot capacity is exceeded
-     */
+     * Force set stack at current slot.
+     * */
     override fun setStack(stack: ItemStack) {
-        setStack(stack, false)
+        @Suppress("DEPRECATION")
+        setStack(stack, true)
     }
 
     /**
+     * Provides checking when before item is inserted into
+     * the slot.
+     *
      * @throws IllegalArgumentException when the incoming stack cannot be inserted into the slot while <tt>force == true</tt>
      * @throws IllegalStateException    when the slot capacity is exceeded while <tt>force == true</tt>
      */
+    @Deprecated("Logic error when `force` == true.")
     fun setStack(stack: ItemStack, force: Boolean) {
         if (!force) {
-            require(canInsert(stack)) { "Cannot insert into slot!" }
+            require(canInsert(stack)) { "Cannot insert into slot!" } // todo: check logic
             check(stack.count <= stackCapacity) { "Slot capacity is exceeded!" }
         }
         super.setStack(stack)
