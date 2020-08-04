@@ -5,6 +5,7 @@ plugins {
     id("com.matthewprenger.cursegradle") version CurseGradle.version
     id("org.jetbrains.dokka") version "0.10.1"
     id("maven-publish")
+    id("maven")
     id("signing")
 }
 
@@ -94,13 +95,9 @@ signing {
     sign(configurations.archives.get())
 }
 
-java {
-    @Suppress("UnstableApiUsage")
-    withJavadocJar()
-    @Suppress("UnstableApiUsage")
-    withSourcesJar()
-}
 
+
+// for publishing to maven local
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -112,49 +109,83 @@ publishing {
                 artifact(tasks["javadocJar"])
                 artifact(tasks["remapJar"])
             }
-
-            pom {
-                packaging = "jar"
-                name.set("Just Another MC Gui")
-                description.set("A Fabric module for widget-based GUI for Minecraft\"")
-                url.set("https://github.com/ye-yu/OSSRH-59550")
-
-                licenses {
-                    license {
-                        name.set("MIT")
-                        url.set("https://github.com/ye-yu/OSSRH-59550/blob/master/LICENSE")
-                    }
-                }
-
-                developers {
-                    developer {
-                        name.set("Ye Yu")
-                        id.set("ye-yu")
-                        email.set("rafolwen98@gmail.com")
-                    }
-                }
-
-                scm {
-                    connection.set("scm:git:https://github.com/ye-yu/OSSRH-59550.git")
-                    developerConnection.set("scm:git:ssh://git@github.com:ye-yu/OSSRH-59550.git")
-                    url.set("https://github.com/ye-yu/OSSRH-59550/")
-                }
-            }
         }
 
         repositories {
-            maven {
-                val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-                val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-                url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-
-                credentials {
-                    username = sonatypeUsername
-                    password = sonatypePassword
-                }
-            }
             mavenLocal()
         }
+    }
+}
+
+tasks.named<Upload>("uploadArchives") {
+    repositories {
+        withConvention(MavenRepositoryHandlerConvention::class) {
+            mavenDeployer {
+                beforeDeployment {
+                    @Suppress("DEPRECATION")
+                    signing.signPom(this)
+                }
+
+                withGroovyBuilder {
+                    "repository"("url" to "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                        "authentication"("userName" to sonatypeUsername, "password" to sonatypePassword)
+                    }
+
+                    "snapshotRepository"("url" to "https://oss.sonatype.org/content/repositories/snapshots/") {
+                        "authentication"("userName" to sonatypeUsername, "password" to sonatypePassword)
+                    }
+                }
+                pom.project {
+                    withGroovyBuilder {
+                        "name"("Just Another MC Gui")
+                        "packaging"("jar")
+                        // optionally artifactId can be defined here
+                        "description"("A Fabric module for widget-based GUI for Minecraft")
+                        "url"("https://github.com/ye-yu/OSSRH-59550")
+
+                        "scm" {
+                            "connection"("scm:git:ssh://git@github.com:ye-yu/OSSRH-59550.git")
+                            "developerConnection"("scm:git:ssh://git@github.com:ye-yu/OSSRH-59550.git")
+                            "url"("https://github.com/ye-yu/OSSRH-59550")
+                        }
+
+                        "licenses" {
+                            "license" {
+                                setProperty("name", "MIT")
+                                setProperty("url", "https://github.com/ye-yu/OSSRH-59550/blob/master/LICENSE")
+                            }
+                        }
+
+                        "developers" {
+                            "developer" {
+                                setProperty("id", "ye-yu")
+                                setProperty("name", "Ye Yu")
+                                setProperty("email", "rafolwen98@gmail.com")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+task("writeNewPom") {
+    doLast {
+        maven.pom {
+            withGroovyBuilder {
+                "project" {
+                    setProperty("inceptionYear", "2008")
+                    "licenses" {
+                        "license" {
+                            setProperty("name", "The Apache Software License, Version 2.0")
+                            setProperty("url", "http://www.apache.org/licenses/LICENSE-2.0.txt")
+                            setProperty("distribution", "repo")
+                        }
+                    }
+                }
+            }
+        }.writeTo("$buildDir/newpom.xml")
     }
 }
 
