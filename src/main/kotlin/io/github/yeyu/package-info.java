@@ -1,7 +1,6 @@
-
 /**
  * <h1>JAMCGUI - Just Another MC Gui</h1>
- *
+ * <p>
  * Main module for creating GUIs using
  * widgets.
  * <hr>
@@ -25,5 +24,5 @@
  * <p>
  * Contains entry-point class for Fabric to
  * register screen packets.
- * */
+ */
 package io.github.yeyu;

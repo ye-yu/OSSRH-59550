@@ -1,4 +1,3 @@
-
 /**
  * Contains utility functions
  * for:
@@ -7,5 +6,5 @@
  *     <li>Screen Drawing (Texture, Scissors, etc) </li>
  *     <li>Logging</li>
  * </ul>
- * */
+ */
 package io.github.yeyu.util;

@@ -12,6 +12,7 @@ interface Widget {
      * The x coord relative to the parent widget
      * */
     val relativeX: Int
+
     /**
      * The y coord relative to the parent widget
      * */

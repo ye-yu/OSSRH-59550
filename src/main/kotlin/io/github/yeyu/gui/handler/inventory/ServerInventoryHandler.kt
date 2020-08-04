@@ -1,6 +1,5 @@
 package io.github.yeyu.gui.handler.inventory
 
-import io.github.yeyu.gui.renderer.widget.ClickEvent
 import io.github.yeyu.gui.handler.ScreenRendererHandler
 import io.github.yeyu.gui.handler.ServerScreenHandler
 import io.github.yeyu.gui.handler.inventory.utils.CapacityConstrainedSlot
@@ -8,8 +7,9 @@ import io.github.yeyu.gui.handler.inventory.utils.InventoryType
 import io.github.yeyu.gui.handler.inventory.utils.InventoryUtil
 import io.github.yeyu.gui.handler.inventory.utils.SlotActionType
 import io.github.yeyu.gui.handler.inventory.utils.SlotActionType.*
-import io.github.yeyu.gui.handler.provider.InventoryProvider
 import io.github.yeyu.gui.handler.listener.ServerInventoryInteractionListener
+import io.github.yeyu.gui.handler.provider.InventoryProvider
+import io.github.yeyu.gui.renderer.widget.ClickEvent
 import io.github.yeyu.packet.ScreenPacket
 import io.github.yeyu.util.Logger
 import net.fabricmc.fabric.api.network.PacketContext

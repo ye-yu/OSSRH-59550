@@ -37,12 +37,12 @@ class LabelWidget(
     override val width: Int
         get() = renderer.getWidth(label)
     override val height: Int = renderer.fontHeight
-    private val offsetX = when(horizontalAnchor) {
+    private val offsetX = when (horizontalAnchor) {
         AnchorType.START -> 0
         AnchorType.MIDDLE -> -(width / 2.0).toInt()
         AnchorType.END -> -width
     }
-    private val offsetY = when(verticalAnchor) {
+    private val offsetY = when (verticalAnchor) {
         AnchorType.START -> 0
         AnchorType.MIDDLE -> -(height / 2.0).toInt()
         AnchorType.END -> -height

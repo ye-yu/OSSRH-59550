@@ -3,6 +3,7 @@ package io.github.yeyu.util
 import kotlin.reflect.KClass
 import kotlin.reflect.full.cast
 import java.lang.ClassCastException as JClassCastException
+
 object Classes {
 
     /**
@@ -33,7 +34,12 @@ object Classes {
      * });
      * ```
      * */
-    fun <T> runUnsafe(obj: Any, castTo: Class<T>, failedMsg: String?, consumer: (T) -> Unit) { // todo: change lambda to java Consumer type
+    fun <T> runUnsafe(
+        obj: Any,
+        castTo: Class<T>,
+        failedMsg: String?,
+        consumer: (T) -> Unit
+    ) { // todo: change lambda to java Consumer type
         if (!castTo.isInstance(obj)) {
             if (failedMsg != null)
                 Logger.error(failedMsg, Throwable())
@@ -68,7 +74,12 @@ object Classes {
      *
      * Otherwise, returns `fallback`.
      * */
-    fun <T, V> getUnsafe(obj: Any, castTo: Class<T>, fallback: V, consumer: (T) -> V): V { // todo: change function lambda to java function
+    fun <T, V> getUnsafe(
+        obj: Any,
+        castTo: Class<T>,
+        fallback: V,
+        consumer: (T) -> V
+    ): V { // todo: change function lambda to java function
         if (!castTo.isInstance(obj)) return fallback
         return consumer(castTo.cast(obj))
     }
