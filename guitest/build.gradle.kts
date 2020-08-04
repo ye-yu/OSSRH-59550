@@ -1,18 +1,34 @@
+@file:Suppress("UnstableApiUsage")
+
+import net.fabricmc.loom.task.RemapJarTask
+
 plugins {
     kotlin("jvm")
-    kotlin("plugin.serialization")
     id("fabric-loom")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+base {
+    archivesBaseName = Info.modid + "-test"
 }
 
 group = Info.group
 version = Info.version
 
+
 repositories {
-    maven(url = "https://maven.fabricmc.net") { name = "Fabric" }
-    maven(url = "https://libraries.minecraft.net/") { name = "Mojang" }
-    maven(url = "https://kotlin.bintray.com/kotlinx/") { name = "Kotlinx" }
-    mavenCentral()
+    maven(url = "https://maven.fabricmc.net/") {
+        name = "Fabric"
+    }
+    maven(url = "https://kotlin.bintray.com/kotlinx") {
+        name = "Kotlinx"
+    }
     mavenLocal()
+    mavenCentral()
     jcenter()
 }
 
@@ -21,68 +37,32 @@ minecraft {
 }
 
 dependencies {
-    minecraft("com.mojang", "minecraft", Minecraft.version)
-    mappings("net.fabricmc", "yarn", Fabric.YarnMappings.version, classifier = "v2")
+    minecraft(group = "com.mojang", name = "minecraft", version = Minecraft.version)
+    mappings(group = "net.fabricmc", name = "yarn", version = Fabric.YarnMappings.version, classifier = "v2")
 
-    modImplementation("net.fabricmc", "fabric-loader", Fabric.Loader.version)
-    modImplementation("net.fabricmc", "fabric-language-kotlin", Fabric.Kotlin.version)
-    modImplementation("net.fabricmc.fabric-api", "fabric-api", Fabric.API.version)
-    compileOnly("com.google.code.findbugs", "jsr305", "3.0.0")
-    implementation(project(":"))
+    modImplementation(group = "net.fabricmc", name = "fabric-loader", version = Fabric.Loader.version)
+    modImplementation(group = "net.fabricmc.fabric-api", name = "fabric-api", version = Fabric.API.version)
 
-    includeApi(Jetbrains.Kotlin.stdLib)
-    includeApi(Jetbrains.Kotlin.reflect)
-    includeApi(Jetbrains.Kotlinx.coroutines)
-    includeApi(Jetbrains.Kotlinx.serialization)
+    modImplementation(project(":"))
+
+    modImplementation(group = "io.github.prospector.modmenu", name = "ModMenu", version = "+")
 }
 
-tasks {
-    val sourcesJar by creating(Jar::class) {
-        archiveClassifier.set("sources")
+val publishToMavenLocal = rootProject.tasks.getByName<Task>("publishToMavenLocal")
 
-        from(sourceSets["main"].allSource)
+val remapJar = tasks.getByName<RemapJarTask>("remapJar") {
+    (this as Task).dependsOn(publishToMavenLocal)
+}
 
-        dependsOn(JavaPlugin.CLASSES_TASK_NAME)
-    }
-
-    val javadocJar by creating(Jar::class) {
-        archiveClassifier.set("javadoc")
-
-        from(project.tasks["javadoc"])
-
-        dependsOn(JavaPlugin.JAVADOC_TASK_NAME)
-    }
-
-    compileJava {
-        targetCompatibility = "1.8"
-        sourceCompatibility = "1.8"
-    }
-
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-            freeCompilerArgs = listOf(
-                "-Xopt-in=kotlin.RequiresOptIn",
-                "-Xopt-in=kotlin.ExperimentalStdlibApi"
-            )
-        }
-    }
-
-    processResources {
-        filesMatching("fabric.mod.json") {
-            expand(
+tasks.getByName<ProcessResources>("processResources") {
+    filesMatching("fabric.mod.json") {
+        expand(
+            mutableMapOf(
                 "modid" to Info.modid,
-                "name" to Info.name,
                 "version" to Info.version,
-                "description" to Info.description,
                 "kotlinVersion" to Jetbrains.Kotlin.version,
                 "fabricApiVersion" to Fabric.API.version
             )
-        }
+        )
     }
-}
-
-fun DependencyHandlerScope.includeApi(notation: String) {
-    include(notation)
-    modApi(notation)
 }
