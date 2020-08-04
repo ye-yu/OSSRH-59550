@@ -2,10 +2,14 @@
 
 A Fabric module for widget-based GUI for Minecraft
 
+![Require Fabric Kotlin](https://i.imgur.com/c1DH9VL.png)
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.ye-yu/jamcgui.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.ye-yu%22%20AND%20a:%22jamcgui%22)
+
 [LICENSE](LICENSE)
 
-jamcgui presents a more vanilla-style of GUI rendering using
-three main components:
+jamcgui presents a clearer control of GUI rendering and handling
+using three main components:
 
 - Screen Renderer - extended from `HandledScreen`, a client-side 
 instance for storing widgets to be drawn
@@ -14,15 +18,38 @@ interactions
 - Screen Renderer Handler - extended from `ScreenHandler`, a 
 context handler between the client and the server
 
-As a result, this provides full and clear control on what
-to do in each component. This is because the vanilla
-`HandledScreen` is no longer in-charge in event listening. 
-If you want to build a GUI that interacts with the gameplay,
-this module can be beneficial for you!
+As a result, the vanilla `HandledScreen` is no longer in-charge
+of event listening. If you want to build a GUI that interacts
+with the gameplay, this module can be beneficial for you!
 
 jamcgui also offers a utility file to perform networking
 between the client and the server. 
 
+# Installation guide
+
+Add this path to your mod dependency
+```groovy
+dependencies { 
+    modImplementation "io.github.ye-yu:jamcgui:0.0.1-alpha.4"
+
+//  uncomment below to bundle jar
+//    include "io.github.ye-yu:jamcgui:0.0.1-alpha.4"
+}
+```
+
+```kts
+dependencies {
+    modImplementation("io.github.ye-yu:jamcgui:0.0.1-alpha.4")
+
+//  uncomment below to bundle jar
+//    include("io.github.ye-yu:jamcgui:0.0.1-alpha.4")
+}
+```
+
+This mod is written in Kotlin (because kotlin is life uwu).
+Read about Fabric Kotlin [here](https://www.curseforge.com/minecraft/mc-mods/fabric-language-kotlin).
+If you don't bundle this mod, you can obtain jamcgui latest
+release at the [release](release) page.
 # Simplified Steps to Build Gui
 
 You must extend the `ScreenRenderer` and 
@@ -217,5 +244,27 @@ Related reference:
 # Footnote
 
 There are more pre-implemented widgets and screen handlers
-that could be useful for most cases. A wiki will be added
-for future public reference.
+that could be useful for most cases. If you are creating
+widgets, `ChildWidget` and `ParentWidget` are the available
+options. Widget listens to client events but can query
+handler data too. Implement [provider interfaces](src/main/kotlin/io/github/yeyu/gui/handler/provider)
+on the client(!) handler, and cast handler type to the implemented
+provider interface to run the interface method. Handler
+but return the appropriate value based on the passed "name"
+value.
+
+While listening to events, widget can broadcast update to
+the client handler too. Implement [handler listener interfaces](src/main/kotlin/io/github/yeyu/gui/handler/listener)
+on the client(!) handler. The client handler usually have to
+send the received value to the server handler so that the
+server can compute the correct action.
+
+As a rule of thumb, implement provider if you are only conveying
+and drawing information from the server to the client.
+Implement listener if you want to send client events to
+the server.
+
+
+<small>!: Must be a client handler</small>
+
+A wiki will be added for future public reference.
