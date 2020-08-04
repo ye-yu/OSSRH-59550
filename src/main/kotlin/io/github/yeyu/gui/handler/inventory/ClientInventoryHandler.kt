@@ -1,6 +1,5 @@
 package io.github.yeyu.gui.handler.inventory
 
-import io.github.yeyu.gui.renderer.widget.ClickEvent
 import io.github.yeyu.gui.handler.ClientScreenHandler
 import io.github.yeyu.gui.handler.ScreenRendererHandler
 import io.github.yeyu.gui.handler.inventory.utils.CapacityConstrainedSlot
@@ -9,6 +8,7 @@ import io.github.yeyu.gui.handler.inventory.utils.InventoryUtil
 import io.github.yeyu.gui.handler.inventory.utils.SlotActionType
 import io.github.yeyu.gui.handler.listener.ClientInventoryInteractionListener
 import io.github.yeyu.gui.handler.provider.InventoryProvider
+import io.github.yeyu.gui.renderer.widget.ClickEvent
 import io.github.yeyu.packet.ScreenPacket
 import net.fabricmc.fabric.api.network.PacketContext
 import net.minecraft.entity.player.PlayerInventory
@@ -19,6 +19,7 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerType
 import java.util.*
 import java.util.stream.IntStream
+
 // todo: create abstract method for initBlockInventory
 /**
  * Implemented client inventory handler
@@ -31,7 +32,7 @@ abstract class ClientInventoryHandler<T : ScreenRendererHandler>(
 ) : ClientScreenHandler(type, syncId),
     ClientInventoryInteractionListener, InventoryProvider {
 
-    var pauseUpdateListening = true
+    var pauseUpdateListening = false
 
     override var blockInventory: Inventory? = SimpleInventory(0)
 
