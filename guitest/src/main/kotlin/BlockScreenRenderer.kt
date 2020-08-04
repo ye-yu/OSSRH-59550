@@ -11,8 +11,8 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 
-class BlockScreenRenderer(handler: ScreenRendererHandler, inventory: PlayerInventory, title: Text?) :
-    ScreenRenderer<ScreenRendererHandler>(handler, inventory, title) {
+class BlockScreenRenderer(handler: ScreenRendererHandler, inventory: PlayerInventory, title: Text) :
+    ScreenRenderer<ScreenRendererHandler>(handler, inventory, title, TEXTURE) {
 
     companion object {
         private val TEXTURE: Identifier = Identifier("textures/gui/container/anvil.png")
@@ -74,16 +74,4 @@ class BlockScreenRenderer(handler: ScreenRendererHandler, inventory: PlayerInven
         this.addListener(hotbarPanel)
         this.addListener(textField)
     }
-
-    override fun drawBackground(matrices: MatrixStack?, delta: Float, mouseX: Int, mouseY: Int) {
-        if (this.client == null) return
-
-        @Suppress("DEPRECATION")
-        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f)
-        client!!.textureManager.bindTexture(TEXTURE)
-        val middleX = (width - backgroundWidth) / 2
-        val middleY = (height - backgroundHeight) / 2
-        this.drawTexture(matrices, middleX, middleY, 0, 0, backgroundWidth, backgroundHeight)
-    }
-
 }

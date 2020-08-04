@@ -18,6 +18,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
+import net.minecraft.util.Identifier
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11
 import java.util.*
@@ -26,7 +27,12 @@ import kotlin.collections.ArrayList
 /**
  * A modified handled screen to cater widget & listener features
  * */
-abstract class ScreenRenderer<T : ScreenRendererHandler>(handler: T, inventory: PlayerInventory, title: Text?) :
+open class ScreenRenderer<T : ScreenRendererHandler>(
+    handler: T,
+    inventory: PlayerInventory,
+    title: Text,
+    private val texture: Identifier
+) :
     HandledScreen<T>(handler, inventory, title) {
 
     var toRenderTooltip: ItemStack = ItemStack.EMPTY
@@ -295,5 +301,16 @@ abstract class ScreenRenderer<T : ScreenRendererHandler>(handler: T, inventory: 
         listeners.clear()
         parents.clear()
         super.onClose()
+    }
+
+    override fun drawBackground(matrices: MatrixStack?, delta: Float, mouseX: Int, mouseY: Int) {
+        if (this.client == null) return
+
+        @Suppress("DEPRECATION")
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f)
+        client!!.textureManager.bindTexture(this.texture)
+        val middleX = (width - backgroundWidth) / 2
+        val middleY = (height - backgroundHeight) / 2
+        this.drawTexture(matrices, middleX, middleY, 0, 0, backgroundWidth, backgroundHeight)
     }
 }
