@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 plugins {
     kotlin("jvm") version Jetbrains.Kotlin.version
     kotlin("plugin.serialization") version Jetbrains.Kotlin.version
@@ -95,8 +97,6 @@ signing {
     sign(configurations.archives.get())
 }
 
-
-
 // for publishing to maven local
 publishing {
     publications {
@@ -122,8 +122,7 @@ tasks.named<Upload>("uploadArchives") {
         withConvention(MavenRepositoryHandlerConvention::class) {
             mavenDeployer {
                 beforeDeployment {
-                    @Suppress("DEPRECATION")
-                    signing.signPom(this)
+                    this.addArtifact(signing.sign(this.pomArtifact).singleSignature)
                 }
 
                 withGroovyBuilder {
@@ -167,25 +166,6 @@ tasks.named<Upload>("uploadArchives") {
                 }
             }
         }
-    }
-}
-
-task("writeNewPom") {
-    doLast {
-        maven.pom {
-            withGroovyBuilder {
-                "project" {
-                    setProperty("inceptionYear", "2008")
-                    "licenses" {
-                        "license" {
-                            setProperty("name", "The Apache Software License, Version 2.0")
-                            setProperty("url", "http://www.apache.org/licenses/LICENSE-2.0.txt")
-                            setProperty("distribution", "repo")
-                        }
-                    }
-                }
-            }
-        }.writeTo("$buildDir/newpom.xml")
     }
 }
 
