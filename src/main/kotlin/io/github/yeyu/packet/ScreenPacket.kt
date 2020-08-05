@@ -65,7 +65,7 @@ object ScreenPacket {
             return
         }
 
-        val screenHandler = Classes.getUnsafe(currentScreen, HandledScreen::class.java, null) { it.screenHandler }
+        val screenHandler = Classes.getUnsafe(currentScreen, HandledScreen::class, null) { it.screenHandler }
         if (screenHandler == null) {
             Logger.error("Current screen is not a handled screen. Programming error?", Throwable())
             return

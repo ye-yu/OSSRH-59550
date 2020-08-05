@@ -57,7 +57,7 @@ class CapacityConstrainedSlot(inventory: Inventory, index: Int, private val slot
         if (getStack().isEmpty) return insertPredicate(stack)
         if (stack.isEmpty) return insertPredicate(stack)
         if (!canCombine(stack)) return false
-        val sidedCanInsert = Classes.getUnsafe(inventory, SidedInventory::class.java, true) {
+        val sidedCanInsert = Classes.getUnsafe(inventory, SidedInventory::class, true) {
             it.canInsert(slotNumber, stack, null)
         }
         return if (!sidedCanInsert) false
