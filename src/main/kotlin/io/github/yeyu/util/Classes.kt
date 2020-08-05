@@ -1,5 +1,7 @@
 package io.github.yeyu.util
 
+import java.util.function.Consumer
+import java.util.function.Function
 import kotlin.reflect.KClass
 import kotlin.reflect.full.cast
 import java.lang.ClassCastException as JClassCastException
@@ -38,14 +40,14 @@ object Classes {
         obj: Any,
         castTo: Class<T>,
         failedMsg: String?,
-        consumer: (T) -> Unit
-    ) { // todo: change lambda to java Consumer type
+        consumer: Consumer<T>
+    ) {
         if (!castTo.isInstance(obj)) {
             if (failedMsg != null)
                 Logger.error(failedMsg, Throwable())
             return
         }
-        consumer(castTo.cast(obj))
+        consumer.accept(castTo.cast(obj))
     }
 
     /**
@@ -69,7 +71,7 @@ object Classes {
     }
 
     /**
-     * Runs consumer lambda and return the returned value if `obj` is an instance
+     * Runs lambda and returns the returned value if `obj` is an instance
      * of the specified class.
      *
      * Otherwise, returns `fallback`.
@@ -78,14 +80,14 @@ object Classes {
         obj: Any,
         castTo: Class<T>,
         fallback: V,
-        consumer: (T) -> V
-    ): V { // todo: change function lambda to java function
+        function: Function<T, V>
+    ): V {
         if (!castTo.isInstance(obj)) return fallback
-        return consumer(castTo.cast(obj))
+        return function.apply(castTo.cast(obj))
     }
 
     /**
-     * Runs consumer lambda and return the returned value if `obj` is an instance
+     * Runs lambda and returns the returned value if `obj` is an instance
      * of the specified class.
      *
      * Otherwise, returns `fallback`.
