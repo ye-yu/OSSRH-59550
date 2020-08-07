@@ -8,6 +8,13 @@ import org.lwjgl.opengl.GL11
 
 /**
  * Screen drawing utility file
+ *
+ * This portion is file is adapting codes from the
+ * [LibGui repo][https://github.com/CottonMC/LibGui]
+ *
+ * Copyright: Copyright (c) 2018 The Cotton Project
+ *
+ * LICENSE: [MIT][https://github.com/CottonMC/LibGui/blob/master/LICENSE]
  * */
 object DrawerUtil {
     /**
@@ -49,7 +56,7 @@ object DrawerUtil {
     }
 
     /**
-     * Invert the color of the specified rectangle
+     * Invert the color on the area of the specified rectangle
      * */
     fun invertedRect(x: Int, y: Int, width: Int, height: Int) {
         val tessellator = Tessellator.getInstance()

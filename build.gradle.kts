@@ -111,11 +111,37 @@ publishing {
             }
         }
 
+        create<MavenPublication>("mavenLocal") {
+            artifacts {
+                version += "-LOCAL"
+
+                artifact(tasks["sourcesJar"]) {
+                    builtBy(tasks["remapSourcesJar"])
+                }
+
+                artifact(tasks["javadocJar"])
+                artifact(tasks["remapJar"])
+            }
+        }
+
         repositories {
             mavenLocal()
         }
     }
 }
+
+tasks.withType(PublishToMavenLocal::class) {
+    onlyIf {
+        publication == publishing.publications["mavenLocal"]
+    }
+}
+
+tasks.withType(PublishToMavenRepository::class) {
+    onlyIf {
+        publication != publishing.publications["mavenLocal"]
+    }
+}
+
 
 tasks.named<Upload>("uploadArchives") {
     repositories {

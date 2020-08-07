@@ -9,7 +9,6 @@ import io.github.yeyu.gui.renderer.widget.listener.KeyListener
 import io.github.yeyu.gui.renderer.widget.listener.Listener
 import io.github.yeyu.gui.renderer.widget.listener.MouseListener
 import io.github.yeyu.util.Classes
-import io.github.yeyu.util.Scissors
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.screen.ingame.HandledScreen
@@ -124,13 +123,13 @@ open class ScreenRenderer<T : ScreenRendererHandler>(
             }
         }
         drawBackground(matrices, delta, mouseX, mouseY)
+        val mc = MinecraftClient.getInstance()
         GL11.glEnable(GL11.GL_SCISSOR_TEST)
-        Scissors.refreshScissors()
+        GL11.glScissor(0, 0, mc.window.framebufferWidth, mc.window.framebufferHeight)
         for (e in parents) {
             e.render(matrices!!, mouseX - x, mouseY - y, this)
         }
         GL11.glDisable(GL11.GL_SCISSOR_TEST)
-        Scissors.checkStackIsEmpty()
         DiffuseLighting.disable() //Needed because super.render leaves dirty state
         // draw cursor item stack
 

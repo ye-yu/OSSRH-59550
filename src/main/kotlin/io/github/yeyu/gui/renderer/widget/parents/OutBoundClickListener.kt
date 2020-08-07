@@ -1,8 +1,8 @@
 package io.github.yeyu.gui.renderer.widget.parents
 
 import io.github.yeyu.gui.handler.ScreenRendererHandler
-import io.github.yeyu.gui.handler.listener.ClientInventoryInteractionListener
-import io.github.yeyu.gui.handler.provider.InventoryProvider
+import io.github.yeyu.gui.handler.inventory.ClientInventoryInteractionListener
+import io.github.yeyu.gui.handler.inventory.InventoryHandler
 import io.github.yeyu.gui.renderer.ScreenRenderer
 import io.github.yeyu.gui.renderer.widget.ChildWidget
 import io.github.yeyu.gui.renderer.widget.ParentWidget
@@ -65,7 +65,7 @@ class OutBoundClickListener(
     }
 
     override fun <T : ScreenRendererHandler> onKeyPressed(keyCode: Int, scanCode: Int, modifier: Int, handler: T) {
-        if (Classes.getUnsafe(handler, InventoryProvider::class, true) { it.getCursorStack().isEmpty }) return
+        if (Classes.getUnsafe(handler, InventoryHandler::class, true) { it.getCursorStack().isEmpty }) return
         if (!MinecraftClient.getInstance().options.keyDrop.matchesKey(keyCode, scanCode)) return
         Classes.runUnsafe(handler, ClientInventoryInteractionListener::class, null) {
             it.onItemThrow(-999, Screen.hasControlDown())

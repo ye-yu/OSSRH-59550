@@ -1,13 +1,14 @@
-package io.github.yeyu.gui.handler.provider
+package io.github.yeyu.gui.handler.inventory
 
 import io.github.yeyu.gui.handler.inventory.utils.CapacityConstrainedSlot
 import io.github.yeyu.gui.handler.inventory.utils.InventoryType
+import io.github.yeyu.gui.renderer.widget.ClickEvent
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import java.util.*
 
-interface InventoryProvider {
+interface InventoryHandler {
     /**
      * A list of slots handled by the screen handler
      * */
@@ -27,6 +28,28 @@ interface InventoryProvider {
     var blockInventory: Inventory? // init
 
     /**
+     * The calculated space before finalising
+     * to constrained slots
+     * */
+    val calculatedStack: HashMap<Int, ItemStack>
+
+    /**
+     * The set of clicked slots
+     * */
+    val clickedSlots: LinkedHashSet<Int>
+
+    /**
+     * The clicked item
+     * */
+    var clickedItem: ItemStack
+
+    /**
+     * Mouse down event describing a part of a slot action
+     * */
+    var clickEvent: ClickEvent
+
+
+    /**
      * @return the stack from the list of slots
      * @see constrainedSlots
      * */
@@ -38,9 +61,6 @@ interface InventoryProvider {
      * */
     fun initPlayerInventory()
 
-    // both client side and server needs to init block inventory
-    // but it seems like client does it on packet received
-    // review?
     /**
      * Initialise block/other inventory into the list of slots
      *
@@ -48,7 +68,7 @@ interface InventoryProvider {
      * because client does not have access to the inventory source
      * @see constrainedSlots
      * */
-    fun initBlockInventory()
+    fun initBlockInventory(blockInv: Inventory)
 
     /**
      * @return cursor stack

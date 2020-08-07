@@ -2,8 +2,9 @@ package io.github.yeyu.gui.renderer.widget.children
 
 import com.mojang.blaze3d.systems.RenderSystem
 import io.github.yeyu.gui.handler.ScreenRendererHandler
-import io.github.yeyu.gui.handler.listener.ClientInventoryInteractionListener
-import io.github.yeyu.gui.handler.provider.InventoryProvider
+import io.github.yeyu.gui.handler.inventory.ClientInventoryInteractionListener
+import io.github.yeyu.gui.handler.inventory.InventoryHandler
+import io.github.yeyu.gui.handler.inventory.InventoryProvider
 import io.github.yeyu.gui.renderer.ScreenRenderer
 import io.github.yeyu.gui.renderer.widget.ChildWidget
 import io.github.yeyu.gui.renderer.widget.ParentWidget
@@ -22,8 +23,8 @@ import net.minecraft.item.ItemStack
 class SingleItemSlotWidget(
     override val relativeX: Int = 0,
     override val relativeY: Int = 0,
-    private val backgroundColor: Int = DrawerUtil.constructColor(0x80, 0x80, 0x80, 0x55),
-    private val activeColor: Int = DrawerUtil.constructColor(0xA0, 0xA0, 0xA0, 0xEE),
+    private val backgroundColor: Int = 0x0,
+    private val activeColor: Int = DrawerUtil.constructColor(0xFF, 0xFF, 0xFF, 0x55),
     private val slotNumber: Int,
     override val name: String
 ) : ChildWidget, MouseListener, KeyListener {
@@ -57,8 +58,8 @@ class SingleItemSlotWidget(
         relativeMouseY: Int,
         screen: ScreenRenderer<*>
     ) {
-        Classes.requireInstanceOf(screen.getHandler(), ClientInventoryInteractionListener::class)
-        val handler: ClientInventoryInteractionListener = screen.getHandler() as ClientInventoryInteractionListener
+        Classes.requireInstanceOf(screen.getHandler(), InventoryProvider::class)
+        val handler: InventoryProvider = screen.getHandler() as InventoryProvider
         if (!handler.hasStack(slotNumber)) return
         val absX: Int = getDrawX()
         val absY: Int = getDrawY()
@@ -117,7 +118,7 @@ class SingleItemSlotWidget(
 
     override fun <T : ScreenRendererHandler> onKeyPressed(keyCode: Int, scanCode: Int, modifier: Int, handler: T) {
         if (!hovered) return
-        if (Classes.getUnsafe(handler, InventoryProvider::class, true) { !it.getCursorStack().isEmpty }) return
+        if (Classes.getUnsafe(handler, InventoryHandler::class, true) { !it.getCursorStack().isEmpty }) return
         if (!MinecraftClient.getInstance().options.keyDrop.matchesKey(keyCode, scanCode)) return
         Classes.runUnsafe(handler, ClientInventoryInteractionListener::class, null) {
             it.onItemThrow(slotNumber, Screen.hasShiftDown())

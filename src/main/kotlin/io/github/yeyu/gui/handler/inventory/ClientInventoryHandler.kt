@@ -5,9 +5,8 @@ import io.github.yeyu.gui.handler.ScreenRendererHandler
 import io.github.yeyu.gui.handler.inventory.utils.CapacityConstrainedSlot
 import io.github.yeyu.gui.handler.inventory.utils.InventoryType
 import io.github.yeyu.gui.handler.inventory.utils.InventoryUtil
+import io.github.yeyu.gui.handler.inventory.utils.InventoryUtil.readInventory
 import io.github.yeyu.gui.handler.inventory.utils.SlotActionType
-import io.github.yeyu.gui.handler.listener.ClientInventoryInteractionListener
-import io.github.yeyu.gui.handler.provider.InventoryProvider
 import io.github.yeyu.gui.renderer.widget.ClickEvent
 import io.github.yeyu.packet.ScreenPacket
 import net.fabricmc.fabric.api.network.PacketContext
@@ -20,7 +19,6 @@ import net.minecraft.screen.ScreenHandlerType
 import java.util.*
 import java.util.stream.IntStream
 
-// todo: create abstract method for initBlockInventory
 /**
  * Implemented client inventory handler
  *
@@ -30,7 +28,7 @@ import java.util.stream.IntStream
 abstract class ClientInventoryHandler<T : ScreenRendererHandler>(
     type: ScreenHandlerType<T>, syncId: Int, override val playerInventory: PlayerInventory
 ) : ClientScreenHandler(type, syncId),
-    ClientInventoryInteractionListener, InventoryProvider {
+    ClientInventoryInteractionListener, InventoryHandler, InventoryProvider {
 
     var pauseUpdateListening = false
 
@@ -64,7 +62,12 @@ abstract class ClientInventoryHandler<T : ScreenRendererHandler>(
         }
     }
 
-    override fun initBlockInventory() {
+    override fun initBlockInventory(blockInv: Inventory) {
+        IntStream.range(playerInventory.size(), playerInventory.size() + blockInv.size())
+            .forEach { k: Int ->
+                val i = k - playerInventory.size()
+                constrainedSlots.add(CapacityConstrainedSlot(blockInv, i, k))
+            }
     }
 
     override fun getCursorStack(): ItemStack {
@@ -181,13 +184,8 @@ abstract class ClientInventoryHandler<T : ScreenRendererHandler>(
                 onSlotChanged(slotNumber, itemStack)
             }
             action.equals(InventoryPacket.BLOCK_INV_UPDATE, true) -> {
-                blockInventory = SimpleInventory(buf.readInt())
-                IntStream.range(playerInventory.size(), playerInventory.size() + blockInventory!!.size())
-                    .forEach { k: Int ->
-                        val i = k - playerInventory.size()
-                        blockInventory!!.setStack(i, buf.readItemStack())
-                        constrainedSlots.add(CapacityConstrainedSlot(blockInventory!!, i, k))
-                    }
+                blockInventory = buf.readInventory()
+                initBlockInventory(blockInventory!!)
             }
             action.equals(InventoryPacket.CURSOR_UPDATE, true) -> {
                 if (pauseUpdateListening) return

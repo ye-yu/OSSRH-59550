@@ -22,9 +22,6 @@
       "io.github.yeyu.MCGuiMain"
     ]
   },
-  "mixins": [
-    "mixins.json"
-  ],
   "depends": {
     "fabricloader": ">=0.8.8",
     "fabric": "*",

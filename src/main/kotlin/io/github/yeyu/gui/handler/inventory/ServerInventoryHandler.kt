@@ -5,10 +5,9 @@ import io.github.yeyu.gui.handler.ServerScreenHandler
 import io.github.yeyu.gui.handler.inventory.utils.CapacityConstrainedSlot
 import io.github.yeyu.gui.handler.inventory.utils.InventoryType
 import io.github.yeyu.gui.handler.inventory.utils.InventoryUtil
+import io.github.yeyu.gui.handler.inventory.utils.InventoryUtil.writeInventory
 import io.github.yeyu.gui.handler.inventory.utils.SlotActionType
 import io.github.yeyu.gui.handler.inventory.utils.SlotActionType.*
-import io.github.yeyu.gui.handler.listener.ServerInventoryInteractionListener
-import io.github.yeyu.gui.handler.provider.InventoryProvider
 import io.github.yeyu.gui.renderer.widget.ClickEvent
 import io.github.yeyu.packet.ScreenPacket
 import io.github.yeyu.util.Logger
@@ -36,7 +35,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
     syncId: Int,
     final override val playerInventory: PlayerInventory
 ) : ServerScreenHandler(type, syncId),
-    ServerInventoryInteractionListener, InventoryProvider {
+    ServerInventoryInteractionListener, InventoryHandler {
 
     // states
     var blockInventoryWaiting = false
@@ -46,6 +45,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
     override var blockInventory: Inventory? = null
         set(value) {
             require(blockInventory == null) { "Can only initialize block inventory once!" }
+            if (value == null) return // cannot do anything if block inventory is empty
             field = value
 
             Logger.info("Initialising block inventory of size ${field!!.size()}")
@@ -62,7 +62,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
             if (!clientHasInited) {
                 blockInventoryWaiting = true
             } else {
-                initBlockInventory()
+                initBlockInventory(field!!)
             }
         }
 
@@ -196,6 +196,31 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
                     ) { "Quick move failed!" }
                 }
             }
+            THROW_ALL -> {
+                if (slotNumber == -999) {
+                    playerInventory.cursorStack = ItemStack.EMPTY
+                    playerInventory.player.dropItem(cursorStack, false, true)
+                } else {
+                    playerInventory.player.dropItem(targetStack, false, true)
+                    constrainedSlots[slotNumber].clear()
+                }
+            }
+            THROW_ONE -> {
+                if (slotNumber == -999) {
+                    val drop = cursorStack.copy()
+                    drop.count = 1
+                    playerInventory.player.dropItem(drop, false, true)
+                    cursorStack.decrement(1)
+                } else {
+                    val drop = targetStack.copy()
+                    drop.count = 1
+                    playerInventory.player.dropItem(drop, false, true)
+                    targetStack.decrement(1)
+                }
+            }
+            NONE -> {
+                // does nothing
+            }
             else -> Logger.warn("Received invalid single slot click action of: $action")
         }
         sendContentUpdates()
@@ -240,25 +265,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
     }
 
     override fun onItemThrow(slotNumber: Int, all: Boolean) {
-        if (slotNumber == -999) {
-            val cursorStack = playerInventory.cursorStack
-            if (all) {
-                playerInventory.cursorStack = ItemStack.EMPTY
-                playerInventory.player.dropItem(cursorStack, false, true)
-            } else {
-                val drop = cursorStack.copy()
-                drop.count = 1
-                playerInventory.player.dropItem(drop, false, true)
-                cursorStack.decrement(1)
-            }
-        } else {
-            val targetStack = constrainedSlots[slotNumber].stack
-            if (targetStack.isEmpty) return  // nothing to update anyway
-            val drop = targetStack.copy()
-            drop.count = 1
-            playerInventory.player.dropItem(drop, false, true)
-            targetStack.decrement(1)
-        }
+        onSlotEvent(slotNumber, if (all) THROW_ALL else THROW_ONE)
     }
 
     override fun getStack(slot: Int): ItemStack {
@@ -338,16 +345,12 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
         )
     }
 
-    override fun initBlockInventory() {
-        requireNotNull(blockInventory)
+    override fun initBlockInventory(blockInv: Inventory) {
         ScreenPacket.sendPacket(
             syncId, InventoryPacket.BLOCK_INV_UPDATE, false,
             playerInventory.player as ServerPlayerEntity?
         ) {
-            it.writeInt(blockInventory!!.size())
-            for (i in 0 until blockInventory!!.size()) {
-                it.writeItemStack(blockInventory!!.getStack(i))
-            }
+            it.writeInventory(blockInv)
         }
     }
 
@@ -355,7 +358,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
         super.clientHasInit()
         clientHasInited = true
         if (blockInventoryWaiting) {
-            initBlockInventory()
+            initBlockInventory(blockInventory!!)
         }
     }
 

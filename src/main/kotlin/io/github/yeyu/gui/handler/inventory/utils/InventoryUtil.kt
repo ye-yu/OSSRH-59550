@@ -1,7 +1,11 @@
 package io.github.yeyu.gui.handler.inventory.utils
 
 import io.github.yeyu.gui.renderer.widget.ClickEvent
+import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack
+import net.minecraft.network.PacketByteBuf
+import net.minecraft.util.collection.DefaultedList
 import java.util.stream.Collectors
 import java.util.stream.IntStream
 
@@ -163,5 +167,21 @@ object InventoryUtil {
             }
         }
         return toInsert
+    }
+
+    fun PacketByteBuf.readInventory(): SimpleInventory {
+        val inv = SimpleInventory(this.readInt())
+
+        for (it in 0 until inv.size()) {
+            inv.setStack(it, readItemStack())
+        }
+        return inv
+    }
+
+    fun PacketByteBuf.writeInventory(inv: Inventory) {
+        writeInt(inv.size())
+        for(it in 0 until inv.size()) {
+            writeItemStack(inv.getStack(it))
+        }
     }
 }

@@ -1,4 +1,6 @@
-package io.github.yeyu.gui.handler.listener
+package io.github.yeyu.gui.handler.inventory
+
+import io.github.yeyu.gui.handler.listener.InventoryInteractionListener
 
 interface ServerInventoryInteractionListener :
     InventoryInteractionListener {

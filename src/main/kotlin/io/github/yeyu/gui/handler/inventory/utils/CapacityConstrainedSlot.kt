@@ -88,7 +88,7 @@ class CapacityConstrainedSlot(inventory: Inventory, index: Int, private val slot
      * @throws IllegalArgumentException when the incoming stack cannot be inserted into the slot while <tt>force == true</tt>
      * @throws IllegalStateException    when the slot capacity is exceeded while <tt>force == true</tt>
      */
-    @Deprecated("Logic error when `force` == true.")
+    @Deprecated("Logic error when `force` == false.")
     fun setStack(stack: ItemStack, force: Boolean) {
         if (!force) {
             require(canInsert(stack)) { "Cannot insert into slot!" } // todo: check logic
