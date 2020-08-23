@@ -27,6 +27,6 @@ class TexturedTextFieldWidget(
         absX: Int,
         absY: Int
     ) {
-        (if (isFocused()) focusedTexture else outFocusedTexture).drawOn(screen, matrices, absX, absY)
+        (if (isFocused()) focusedTexture else outFocusedTexture).drawOn(matrices, absX, absY)
     }
 }

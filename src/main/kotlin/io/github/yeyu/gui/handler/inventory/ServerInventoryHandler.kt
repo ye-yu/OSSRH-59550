@@ -91,18 +91,21 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
         onSlotEvent(slotNumber, action)
     }
 
-    open fun onSlotEvent(slotNumber: Int, action: SlotActionType) {
+    /**
+     * @return true if the action passes, false otherwise
+     * */
+    open fun onSlotEvent(slotNumber: Int, action: SlotActionType): Boolean {
         val cursorStack = playerInventory.cursorStack
         val targetStack = constrainedSlots[slotNumber].stack
 
         when (action) {
             PICKUP_ALL -> {
-                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return
+                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return false
                 constrainedSlots[slotNumber].clear()
                 playerInventory.cursorStack = targetStack
             }
             PICKUP_HALF -> {
-                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return
+                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return false
                 val half = targetStack.count / 2
                 targetStack.decrement(half)
                 playerInventory.cursorStack = targetStack
@@ -111,26 +114,28 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
                 constrainedSlots[slotNumber].stack = newTarget
             }
             PLACE_ALL -> {
-                if (!constrainedSlots[slotNumber].insertPredicate(cursorStack)) return
+                if (!constrainedSlots[slotNumber].insertPredicate(cursorStack)) return false
                 val leftOvers = constrainedSlots[slotNumber].insertItem(cursorStack)
                 playerInventory.cursorStack = leftOvers
             }
-            PLACE_ONE -> if (canStacksCombine(cursorStack, targetStack)) {
-                if (!constrainedSlots[slotNumber].insertPredicate(cursorStack)) return
-                targetStack.increment(1)
-                cursorStack.decrement(1)
-            } else {
-                if (targetStack.isEmpty) {
-                    val toInsert = cursorStack.copy()
-                    toInsert.count = 1
-                    constrainedSlots[slotNumber].stack = toInsert
+            PLACE_ONE -> {
+                if (!constrainedSlots[slotNumber].insertPredicate(cursorStack)) return false
+                if (canStacksCombine(cursorStack, targetStack)) {
+                    targetStack.increment(1)
                     cursorStack.decrement(1)
+                } else {
+                    if (targetStack.isEmpty) {
+                        val toInsert = cursorStack.copy()
+                        toInsert.count = 1
+                        constrainedSlots[slotNumber].stack = toInsert
+                        cursorStack.decrement(1)
+                    }
                 }
             }
             CURSOR_SWAP -> {
                 // only allows when player can take & item can be inserted
-                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return
-                if (!constrainedSlots[slotNumber].insertPredicate(cursorStack)) return
+                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return false
+                if (!constrainedSlots[slotNumber].insertPredicate(cursorStack)) return false
                 constrainedSlots[slotNumber].clear()
                 val extra = constrainedSlots[slotNumber].insertItem(cursorStack)
                 // todo: testing on capacity constrained slot
@@ -142,7 +147,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
                 }
             }
             QUICK_MOVE -> {
-                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return
+                if (!constrainedSlots[slotNumber].takePredicate(playerInventory.player)) return false
                 val inventoryType: InventoryType = getInventoryOfIndex(slotNumber)
                 val remaining: ItemStack
                 remaining = if (inventoryType === InventoryType.BLOCK) { // target slot is block inventory
@@ -223,7 +228,7 @@ abstract class ServerInventoryHandler<T : ScreenRendererHandler>(
             }
             else -> Logger.warn("Received invalid single slot click action of: $action")
         }
-        sendContentUpdates()
+        return true
     }
 
     override fun onMultipleSlotClickEvent(clickedSlots: LinkedHashSet<Int>, button: Int, hasShiftDown: Boolean) {

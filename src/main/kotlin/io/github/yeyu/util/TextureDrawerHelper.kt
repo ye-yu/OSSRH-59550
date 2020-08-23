@@ -1,8 +1,8 @@
 package io.github.yeyu.util
 
 import com.mojang.blaze3d.systems.RenderSystem
-import io.github.yeyu.gui.renderer.ScreenRenderer
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 
@@ -27,27 +27,41 @@ class TextureDrawerHelper(
     private val width: Int,
     private val height: Int,
     private val paintOffsetX: Int = 0,
-    private val paintOffsetY: Int = 0
+    private val paintOffsetY: Int = 0,
+    private val textureWidth: Int = 256,
+    private val textureHeight: Int = 256
 ) {
 
     /**
-     * @param renderer the screen renderer that provides `drawTexture` method
      * @param matrices the matrices to draw texture on
      * @param parentX the x coord to draw the texture on
      * @param parentY the y coord to draw the texture on
      * */
-    fun drawOn(renderer: ScreenRenderer<*>, matrices: MatrixStack?, parentX: Int, parentY: Int) {
+    fun drawOn(matrices: MatrixStack, parentX: Int, parentY: Int) {
+        drawOn(matrices, parentX, parentY, width, height)
+    }
+
+    /**
+     * @param matrices the matrices to draw texture on
+     * @param parentX the x coord to draw the texture on
+     * @param parentY the y coord to draw the texture on
+     * @param width the width to ve overridden
+     * @param height the height to ve overridden
+     * */
+    fun drawOn(matrices: MatrixStack, parentX: Int, parentY: Int, width: Int, height: Int) {
         @Suppress("DEPRECATION")
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f)
         MinecraftClient.getInstance().textureManager.bindTexture(id)
-        renderer.drawTexture(
+        DrawableHelper.drawTexture(
             matrices,
             parentX + paintOffsetX,
             parentY + paintOffsetY,
-            captureX,
-            captureY,
+            captureX.toFloat(),
+            captureY.toFloat(),
             width,
-            height
+            height,
+            textureWidth,
+            textureHeight
         )
     }
 }
