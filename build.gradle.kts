@@ -1,11 +1,11 @@
 @file:Suppress("UNUSED_VARIABLE")
 
 plugins {
+    id("org.jetbrains.dokka") version "1.4.0-rc"
     kotlin("jvm") version Jetbrains.Kotlin.version
     kotlin("plugin.serialization") version Jetbrains.Kotlin.version
     id("fabric-loom") version Fabric.Loom.version
     id("com.matthewprenger.cursegradle") version CurseGradle.version
-    id("org.jetbrains.dokka") version "0.10.1"
     id("maven-publish")
     id("maven")
     id("signing")
@@ -17,11 +17,10 @@ val sonatypeUsername: String by project
 val sonatypePassword: String by project
 
 repositories {
+    jcenter()
+    mavenCentral()
     maven(url = "https://maven.fabricmc.net") { name = "Fabric" }
     maven(url = "https://libraries.minecraft.net/") { name = "Mojang" }
-    maven(url = "https://kotlin.bintray.com/kotlinx/") { name = "Kotlinx" }
-    mavenCentral()
-    jcenter()
 }
 
 minecraft {
@@ -55,7 +54,7 @@ tasks {
 
     val javadocJar by creating(Jar::class) {
         archiveClassifier.set("javadoc")
-        from(project.tasks["dokka"])
+        from(project.tasks["dokkaJavadoc"])
     }
 
     compileJava {
@@ -148,7 +147,10 @@ tasks.named<Upload>("uploadArchives") {
         withConvention(MavenRepositoryHandlerConvention::class) {
             mavenDeployer {
                 beforeDeployment {
-                    this.addArtifact(signing.sign(this.pomArtifact).singleSignature)
+//                    signing.signPom(this)
+                    this.addArtifact(signing.sign(this.pomArtifact).singleSignature.apply {
+                        this.type = "pom." + this.signatureType.extension
+                    })
                 }
 
                 withGroovyBuilder {
