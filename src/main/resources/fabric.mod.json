@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "io.github.yeyu.MCGuiMain"
+      "io.github.yeyu.jamcgui.MCGuiMain"
     ],
     "main": [
-      "io.github.yeyu.MCGuiMain"
+      "io.github.yeyu.jamcgui.MCGuiMain"
     ]
   },
   "depends": {
